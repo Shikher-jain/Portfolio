@@ -465,6 +465,18 @@ body::-webkit-scrollbar-thumb {
     line-height: 1.5;
 }
 
+.portfolio-card .card-copy {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.portfolio-card .badge-row {
+    max-height: 80px;
+    overflow: hidden;
+}
+
 .card-meta {
     font-size: 0.8rem;
     text-transform: uppercase;

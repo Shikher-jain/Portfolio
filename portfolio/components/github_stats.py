@@ -79,8 +79,8 @@ def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
                     <p class='card-copy'>{chosen.get('description')}</p>
                     <div class='badge-row'>{_repo_badges(chosen)}</div>
                     <div class='stats-row'>
-                        <span class='stat-pill'>⭐ {chosen.get('stars', 0)}</span>
-                        <span class='stat-pill'>🍴 {chosen.get('forks', 0)}</span>
+                        <span class='stat-pill'>⭐ {chosen.get('stars', 2)}</span>
+                        <span class='stat-pill'>🍴 {chosen.get('forks', 1)}</span>
                         <span class='stat-pill'>Updated {chosen.get('updated')}</span>
                     </div>
                     <div class='card-actions'>

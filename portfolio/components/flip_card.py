@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from html import escape
-from textwrap import dedent
+from textwrap import dedent, shorten
 from typing import Dict, List
 import uuid
 
@@ -11,18 +11,19 @@ import streamlit as st
 
 def _build_card(project: Dict) -> str:
     card_id = f"card-{uuid.uuid4().hex}"
-    languages = project.get("languages") or ["Python"]
+    languages = (project.get("languages") or ["Python"])[:4]
     description = project.get("description") or "Production-grade AI workflow."
+    topics = (project.get("topics") or [])[:6]
+    front_excerpt = escape(shorten(description, width=140, placeholder="…"))
+    back_excerpt = escape(shorten(description, width=320, placeholder="…"))
     tech_badges = "".join(
         f"<span class='badge'>{escape(lang)}</span>" for lang in languages
     )
-    topics = project.get("topics") or []
     topic_label = project.get("category", "Applied AI")
     topic_html = f"<span class='topic-chip'>{escape(topic_label)}</span>"
-    back_description = escape(description)
     details = (
-        f"<p class='card-copy'>{back_description}</p>"
-        f"<p class='card-meta'>Updated {escape(project.get('updated', ''))}</p>"
+        f"<p class='card-copy'>{back_excerpt}</p>"
+        # f"<p class='card-meta'>Updated {escape(project.get('updated', ''))}</p>"
     )
     stats = (
         f"<div class='stat-pill'>⭐ {project.get('stars', 0)}</div>"
@@ -48,7 +49,7 @@ def _build_card(project: Dict) -> str:
                         <div class='card-updated'>Updated {escape(project.get('updated', ''))}</div>
                     </div>
                     <h3>{escape(project.get('name', 'Project'))}</h3>
-                    <p class='card-copy'>{escape(description[:140])}</p>
+                    <p class='card-copy'>{front_excerpt}</p>
                     <div class='badge-row'>{tech_badges}</div>
                 </div>
                 <div class='card-face card-back'>
