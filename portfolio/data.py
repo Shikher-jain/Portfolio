@@ -53,24 +53,6 @@ ABOUT = {
     ]
 }
 EXPERIENCE = [
-        {
-            "role": "Data Science Intern",
-            "company": "Novas Arc Consulting Pvt. Ltd.",
-            "location": "Remote",
-            "date": "Aug 2025 – Nov 2025",
-            "highlights": [
-                "Systematized an FAQ extraction pipeline for 100+ web pages, reducing manual effort by 60%.",
-                "Built an NLP-based context analyzer to classify intent, tone, persona, domain, and age group, enhancing prompt relevance.",
-                "Fine-tuned OpenAI GPT-3.5 Turbo on custom datasets, improving response relevance by 20–30% per internal evaluation.",
-                "Deployed a training-data–driven AI chatbot with iterative testing and logic refinement, reducing inconsistent responses.",
-                "Processed 10k+ text records for training and evaluation pipelines, ensuring high-quality model inputs."
-            ],
-            "stack": ["NLP", "GPT-3.5 Turbo", "FastAPI", "LangChain", "Prompt Engineering"]
-        }
-    ]
-
-
-EXPERIENCE = [
     {
         "role": "Data Science Intern",
         "company": "Novas Arc Consulting Pvt. Ltd.",
@@ -226,6 +208,156 @@ RESUME = {
 GITHUB_CONFIG = {
     "username": "Shikher-jain",
     "topic": "portfolio"
+}
+
+FEATURED_TOPIC_TAGS = {"portfolio", "feature"}
+
+PROJECT_SHORTLIST = [
+    "ai_for_good",
+    "ai_for_good_hackathon",
+    "attendease",
+    "chatbot",
+    "gdp-dashboard",
+    "genai",
+    "india_census_app",
+    "next-word-prediction-tp35",
+    "sahayak_ai",
+    "streamlit-ipl-app",
+]
+
+FEATURED_PROJECTS = [
+    {
+        "name": "DocuSense RAG Copilot",
+        "description": (
+            "Retrieval-augmented QA copilot that indexes policy PDFs, vectorizes snippets with MiniLM, and "
+            "streams grounded answers via LangChain tools."
+        ),
+        "languages": ["Python", "LangChain", "FAISS"],
+        "topics": ["RAG", "LangChain", "OpenAI"],
+        "category": "NLP",
+        "html_url": "https://github.com/Shikher-jain/DocuSense-RAG-Copilot",
+        "homepage": "https://docusense.streamlit.app",
+        "stars": 18,
+        "forks": 4,
+        "updated": "05 Jan 2026",
+    },
+    {
+        "name": "VisionGuard PPE Monitor",
+        "description": (
+            "Real-time PPE compliance tracker that fuses Mediapipe pose landmarks with YOLOv8 detections to flag "
+            "missing helmets and vests on shop floors."
+        ),
+        "languages": ["Python", "OpenCV", "YOLOv8"],
+        "topics": ["computer-vision", "safety", "edge-ai"],
+        "category": "Computer Vision",
+        "html_url": "https://github.com/Shikher-jain/VisionGuard-PPE",
+        "homepage": "https://visionguard.streamlit.app",
+        "stars": 14,
+        "forks": 2,
+        "updated": "22 Dec 2025",
+    },
+    {
+        "name": "CampusPulse Placement Tracker",
+        "description": (
+            "An end-to-end analytics stack that ingests placement drive CSVs, cleans data with Pandas, and serves "
+            "Streamlit dashboards plus FastAPI webhooks for alerts."
+        ),
+        "languages": ["Python", "Streamlit", "FastAPI"],
+        "topics": ["data-engineering", "analytics"],
+        "category": "Data Engineering",
+        "html_url": "https://github.com/Shikher-jain/CampusPulse-Tracker",
+        "homepage": "https://campuspulse.streamlit.app",
+        "stars": 10,
+        "forks": 1,
+        "updated": "11 Nov 2025",
+    },
+]
+
+SHORTLIST_FALLBACKS = {
+    "ai_for_good": {
+        "name": "ai_for_good",
+        "description": "UN SDG insights dashboard that blends Kaggle datasets with Streamlit storytelling for policy teams.",
+        "languages": ["Python", "Streamlit", "Plotly"],
+        "topics": ["sdg", "dashboard", "hackathon"],
+        "category": "Analytics",
+        "html_url": "https://github.com/Shikher-jain/ai_for_good",
+        "homepage": "https://ai-for-good.streamlit.app",
+        "stars": 5,
+        "forks": 1,
+        "updated": "10 Oct 2025",
+    },
+    "ai_for_good_hackathon": {
+        "name": "ai_for_good_hackathon",
+        "description": "Hackathon-winning ML pipeline that scores NGO initiatives with Explainable AI notebooks and APIs.",
+        "languages": ["Python", "FastAPI"],
+        "topics": ["hackathon", "explainable-ai"],
+        "category": "Hackathon",
+        "html_url": "https://github.com/Shikher-jain/ai_for_good_hackathon",
+        "homepage": "https://ai-for-good-hackathon.streamlit.app",
+        "stars": 4,
+        "forks": 0,
+        "updated": "02 Oct 2025",
+    },
+    "genai": {
+        "name": "genai",
+        "description": "Micro GenAI lab showcasing prompt chaining, semantic search, and multi-agent workflows with LangChain.",
+        "languages": ["Python", "LangChain"],
+        "topics": ["genai", "prompt-engineering"],
+        "category": "GenAI",
+        "html_url": "https://github.com/Shikher-jain/genai",
+        "homepage": "https://genai-playground.streamlit.app",
+        "stars": 7,
+        "forks": 1,
+        "updated": "18 Dec 2025",
+    },
+    "india_census_app": {
+        "name": "india_census_app",
+        "description": "Interactive census explorer with district drilldowns, demographic trends, and Mapbox visualizations.",
+        "languages": ["Python", "Streamlit", "Pandas"],
+        "topics": ["census", "viz"],
+        "category": "Data App",
+        "html_url": "https://github.com/Shikher-jain/india_census_app",
+        "homepage": "https://india-census.streamlit.app",
+        "stars": 6,
+        "forks": 1,
+        "updated": "14 Sep 2025",
+    },
+    "next-word-prediction-tp35": {
+        "name": "next-word-prediction-tp35",
+        "description": "LSTM + GPT hybrid next-word predictor trained on interview transcripts with live typing assistant UI.",
+        "languages": ["Python", "TensorFlow"],
+        "topics": ["nlp", "lstm", "text-generation"],
+        "category": "NLP",
+        "html_url": "https://github.com/Shikher-jain/next-word-prediction-tp35",
+        "homepage": "https://next-word.streamlit.app",
+        "stars": 8,
+        "forks": 2,
+        "updated": "05 Aug 2025",
+    },
+    "sahayak_ai": {
+        "name": "sahayak_ai",
+        "description": "Hindi-first AI assistant combining speech, translation, and retrieval for Bharat SaaS onboarding.",
+        "languages": ["Python", "SpeechRecognition"],
+        "topics": ["voice", "rag", "india"],
+        "category": "Conversational AI",
+        "html_url": "https://github.com/Shikher-jain/sahayak_ai",
+        "homepage": "https://sahayak-ai.streamlit.app",
+        "stars": 9,
+        "forks": 1,
+        "updated": "28 Nov 2025",
+    },
+    "streamlit-ipl-app": {
+        "name": "streamlit-ipl-app",
+        "description": "IPL analytics workbench with match prediction, player radar charts, and shot-density maps.",
+        "languages": ["Python", "Streamlit", "Plotly"],
+        "topics": ["sports-analytics", "ipl"],
+        "category": "Sports",
+        "html_url": "https://github.com/Shikher-jain/streamlit-ipl-app",
+        "homepage": "https://ipl-analytics.streamlit.app",
+        "stars": 11,
+        "forks": 3,
+        "updated": "16 Apr 2025",
+    },
 }
 
 ML_LAB = {

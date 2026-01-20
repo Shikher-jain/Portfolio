@@ -22,13 +22,19 @@ from data import (
     CONTACT,
     EDUCATION,
     EXPERIENCE,
+    FEATURED_PROJECTS,
+    FEATURED_TOPIC_TAGS,
+    PROJECT_SHORTLIST,
+    SHORTLIST_FALLBACKS,
     GITHUB_CONFIG,
     ML_LAB,
     PROFILE,
     RESUME,
     SKILL_GROUPS,
 )
-from github_api import fetch_github_summary, fetch_portfolio_repositories
+
+from github_api import fetch_github_summary, fetch_portfolio_repositories, fetch_repository
+from live_demos import apply_live_demo_links
 
 POSITIVE_TERMS = {
     "confident",
@@ -237,15 +243,96 @@ def _render_education_section() -> None:
     st.markdown("</section>", unsafe_allow_html=True)
 
 
-def _render_projects(username: str, topic: str) -> List[Dict]:
+def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]:
     _anchor("projects")
     st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     st.subheader("Live Projects")
+
+    col_left, col_right = st.columns([3, 1.6])
+    with col_left:
+        source_choice = st.radio(
+            "Project feed",
+            ("GitHub sync", "Featured showcase"),
+            horizontal=True,
+            key="project-source",
+        )
+    with col_right:
+        live_toggle = st.toggle("Live demos only", value=False, key="live-only-toggle")
+
     with st.spinner("Fetching projects from GitHub..."):
-        repos = fetch_portfolio_repositories(username=username, topic=topic)
-    render_project_cards(repos)
+        github_repos = fetch_portfolio_repositories(username=username, topic=topic)
+        github_repos = apply_live_demo_links(github_repos)
+
+    featured_topic_tags = {tag.lower() for tag in FEATURED_TOPIC_TAGS} or {"feature"}
+    shortlist_fallback_map = {key.lower(): value for key, value in SHORTLIST_FALLBACKS.items()}
+    featured_candidates = [
+        repo
+        for repo in github_repos
+        if featured_topic_tags.issubset({topic.lower() for topic in repo.get("topics", [])})
+    ]
+    curated_featured = apply_live_demo_links(FEATURED_PROJECTS)
+
+    using_github_feed = source_choice == "GitHub sync"
+
+    dataset: List[Dict]
+    if source_choice == "GitHub sync":
+        dataset = github_repos
+        if not github_repos:
+            st.info("No repositories tagged with 'portfolio' were found. Showing featured showcase instead.")
+            dataset = curated_featured
+            source_choice = "Featured showcase"
+            using_github_feed = False
+    else:
+        if featured_candidates:
+            dataset = featured_candidates
+        else:
+            st.info(
+                "Tag any repository with both 'portfolio' and 'feature' topics on GitHub to auto-populate this gallery."
+            )
+            dataset = curated_featured
+        using_github_feed = False
+
+    filtered = dataset
+    if live_toggle:
+        filtered = [repo for repo in dataset if repo.get("homepage")]
+        if not filtered:
+            st.warning("No live deployments yet for this view. Showing all projects instead.")
+            filtered = dataset
+
+    missing_shortlist: List[str] = []
+    if using_github_feed and PROJECT_SHORTLIST:
+        name_map = {repo.get("name", "").lower(): repo for repo in filtered}
+        shortlist_matches: List[Dict] = []
+        fallback_matches: List[Dict] = []
+        for desired in PROJECT_SHORTLIST:
+            key = desired.lower()
+            match = name_map.get(key)
+            if match:
+                shortlist_matches.append(match)
+            else:
+                hydrated = fetch_repository(username=username, repo_name=desired)
+                if hydrated:
+                    fallback_matches.append(hydrated)
+                else:
+                    fallback = shortlist_fallback_map.get(key)
+                    if fallback:
+                        fallback_matches.append({**fallback})
+                    else:
+                        missing_shortlist.append(desired)
+        if fallback_matches:
+            fallback_matches = apply_live_demo_links(fallback_matches)
+        if shortlist_matches or fallback_matches:
+            filtered = shortlist_matches + fallback_matches
+
+    if missing_shortlist and using_github_feed:
+        st.caption(
+            "Shortlisted repos not returned in this view: " + ", ".join(missing_shortlist)
+        )
+
+    render_project_cards(filtered)
+    st.caption(f"{len(filtered)} projects - {source_choice}")
     st.markdown("</section>", unsafe_allow_html=True)
-    return repos
+    return github_repos, filtered
 
 
 def _render_ml_lab() -> None:
@@ -319,12 +406,12 @@ def main() -> None:
     render_skills(SKILL_GROUPS)
     st.markdown("</section>", unsafe_allow_html=True)
 
-    repos = _render_projects(GITHUB_CONFIG["username"], GITHUB_CONFIG["topic"])
+    github_repos, showcased_projects = _render_projects(GITHUB_CONFIG["username"], GITHUB_CONFIG["topic"])
 
     summary_for_stats = dict(gh_summary)
-    if repos:
-        summary_for_stats["total_stars"] = sum(repo.get("stars", 0) for repo in repos)
-        summary_for_stats["latest_repo"] = repos[0].get("name", "")
+    if github_repos:
+        summary_for_stats["total_stars"] = sum(repo.get("stars", 0) for repo in github_repos)
+        summary_for_stats["latest_repo"] = github_repos[0].get("name", "")
     else:
         summary_for_stats.setdefault("total_stars", 0)
         summary_for_stats.setdefault("latest_repo", "")
@@ -334,7 +421,8 @@ def main() -> None:
     st.subheader("GitHub Snapshot")
     st.markdown("<p class='subtle-subhead'>Contribution activity</p>", unsafe_allow_html=True)
 
-    render_github_stats(summary_for_stats, repos)
+    spotlight_pool = showcased_projects or github_repos
+    render_github_stats(summary_for_stats, spotlight_pool)
     st.markdown("</section>", unsafe_allow_html=True)
     st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     _render_ml_lab()
