@@ -15,6 +15,7 @@ from components.flip_card import render_project_cards
 from components.github_stats import render_github_stats
 from components.resume import load_resume_base64, render_resume_section
 from components.skills import render_skills
+from components.social_icons import get_social_icon_url
 from data import (
     ABOUT,
     CERTIFICATIONS,
@@ -147,16 +148,22 @@ def _anchor(slug: str) -> None:
     st.markdown(f"<span id='{slug}' class='section-anchor'></span>", unsafe_allow_html=True)
 
 
+def _social_cta(label: str, url: str) -> str:
+    icon_url = get_social_icon_url(label)
+    return (
+        f"<a class='ghost-btn hero-cta' href='{url}' target='_blank' rel='noopener'>"
+        f"<span class='social-icon'><img src='{icon_url}' alt='{label} icon' loading='lazy' /></span>"
+        f"<span>{label}</span>"
+        "</a>"
+    )
+
+
 def _render_hero(summary: Dict) -> None:
     hero_stats = "".join(
         f"<div class='stat-tile'><p class='eyebrow'>{stat['label']}</p><h3>{stat['value']}</h3></div>"
         for stat in PROFILE["hero_stats"]
     )
-    ctas = "".join(
-        f"<a class='ghost-btn' href='{url}' target='_blank' rel='noopener'>{label}</a>"
-        for label, url in PROFILE["socials"].items()
-        if label != "Resume"
-    )
+    ctas = "".join(_social_cta(label, url) for label, url in PROFILE["socials"].items() if label != "Resume")
     resume_b64 = load_resume_base64(RESUME.get("path", ""))
     resume_href = f"data:application/pdf;base64,{resume_b64}" if resume_b64 else "#resume"
     resume_btn = f"<a class='solid-btn' href='{resume_href}' download>Download Resume</a>"

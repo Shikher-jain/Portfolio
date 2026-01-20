@@ -5,8 +5,19 @@ from typing import Dict
 
 import streamlit as st
 
+from .social_icons import get_social_icon_url
+
+
+def _social_icon_html(label: str) -> str:
+    icon_url = get_social_icon_url(label)
+    return f"<span class='social-icon'><img src='{icon_url}' alt='{label} icon' loading='lazy' /></span>"
+
 
 def render_contact_section(contact: Dict) -> None:
+    socials_html = "".join(
+        f"<a class='social-pill' href='{url}' target='_blank' rel='noopener'>{_social_icon_html(name)}<span>{name}</span></a>"
+        for name, url in contact.get('socials', {}).items()
+    )
     st.markdown(
         f"""
         <div class='contact-card'>
@@ -18,9 +29,7 @@ def render_contact_section(contact: Dict) -> None:
                     <button class='ghost-btn copy-btn' data-copy='{contact.get('email')}'>Copy Email</button>
                     <a class='ghost-btn' href='{contact.get('calendly')}' target='_blank' rel='noopener'>Schedule a call</a>
                 </div>
-                <div class='social-list'>
-                    {''.join(f"<a href='{url}' target='_blank' rel='noopener'>{name}</a>" for name, url in contact.get('socials', {}).items())}
-                </div>
+                <div class='social-list'>{socials_html}</div>
             </div>
         </div>
         """,
@@ -56,3 +65,4 @@ def render_contact_section(contact: Dict) -> None:
         """,
         unsafe_allow_html=True,
     )
+
