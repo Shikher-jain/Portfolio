@@ -213,63 +213,126 @@ GITHUB_CONFIG = {
 FEATURED_TOPIC_TAGS = {"portfolio", "feature"}
 
 PROJECT_SHORTLIST = [
-    "ai_for_good",
+    # ===== Computer Vision =====
+    "Hand-Gesture-Controller",
+    "hand-volume-control",
+    "Virtual-Painter",
+
+    # ===== AI / ML Systems =====
+    "AI_FOR_GOOD",
+    "Sahayak_All_Version",
+    "AI-Trainer",
+
+    # ===== Data Science / Analytics =====
+    "Data_Science",
+    "Data-Vista",
+    "India_Census_App",
+    "Streamlit-IPL-App",
+
+    # ===== Mini / Utility Projects =====
+    "Cognifyz",
+    "Password-Generator",
+    "Contact-Book",
+    "Bill-Generator",
+    "Student_Management",
+    "StudentAttendance",
+
+    # ===== GenAI =====
+    "GenAI",
+    "voice-assistant",
+
+    # ===== Live-demo aliases (needed for homepage linking) =====
     "ai_for_good_hackathon",
     "attendease",
-    "chatbot",
     "gdp-dashboard",
-    "genai",
-    "india_census_app",
     "next-word-prediction-tp35",
     "sahayak_ai",
-    "streamlit-ipl-app",
 ]
 
 FEATURED_PROJECTS = [
     {
-        "name": "DocuSense RAG Copilot",
+        "name": "Sahayak_All_Version",
         "description": (
-            "Retrieval-augmented QA copilot that indexes policy PDFs, vectorizes snippets with MiniLM, and "
-            "streams grounded answers via LangChain tools."
+            "Unified Hindi-first assistant combining speech, OCR, and retrieval workflows for Bharat SaaS onboarding."
         ),
-        "languages": ["Python", "LangChain", "FAISS"],
-        "topics": ["RAG", "LangChain", "OpenAI"],
-        "category": "NLP",
-        "html_url": "https://github.com/Shikher-jain/DocuSense-RAG-Copilot",
-        "homepage": "https://docusense.streamlit.app",
+        "languages": ["Python", "Streamlit", "LangChain"],
+        "topics": ["conversational-ai", "rag", "multimodal"],
+        "category": "AI Assistant",
+        "html_url": "https://github.com/Shikher-jain/Sahayak_All_Version",
+        "homepage": "",
         "stars": 18,
-        "forks": 4,
+        "forks": 3,
+        "updated": "14 Jan 2026",
+    },
+    {
+        "name": "StudentAttendance",
+        "description": (
+            "Face-recognition attendance tracker with on-device capture, analytics, and CSV export pipelines."
+        ),
+        "languages": ["Python", "OpenCV", "Streamlit"],
+        "topics": ["computer-vision", "automation"],
+        "category": "EdTech",
+        "html_url": "https://github.com/Shikher-jain/StudentAttendance",
+        "homepage": "",
+        "stars": 9,
+        "forks": 1,
         "updated": "05 Jan 2026",
     },
     {
-        "name": "VisionGuard PPE Monitor",
+        "name": "AI-Trainer",
         "description": (
-            "Real-time PPE compliance tracker that fuses Mediapipe pose landmarks with YOLOv8 detections to flag "
-            "missing helmets and vests on shop floors."
+            "Virtual AI fitness coach that fuses pose estimation with rule engines to guide real-time workouts."
         ),
-        "languages": ["Python", "OpenCV", "YOLOv8"],
-        "topics": ["computer-vision", "safety", "edge-ai"],
+        "languages": ["Python", "MediaPipe"],
+        "topics": ["pose-estimation", "computer-vision"],
         "category": "Computer Vision",
-        "html_url": "https://github.com/Shikher-jain/VisionGuard-PPE",
-        "homepage": "https://visionguard.streamlit.app",
-        "stars": 14,
+        "html_url": "https://github.com/Shikher-jain/AI-Trainer",
+        "homepage": "",
+        "stars": 11,
         "forks": 2,
-        "updated": "22 Dec 2025",
+        "updated": "28 Dec 2025",
     },
     {
-        "name": "CampusPulse Placement Tracker",
+        "name": "Streamlit-IPL-App",
         "description": (
-            "An end-to-end analytics stack that ingests placement drive CSVs, cleans data with Pandas, and serves "
-            "Streamlit dashboards plus FastAPI webhooks for alerts."
+            "Interactive IPL analytics workbench featuring win predictors, radar charts, and player insights."
         ),
-        "languages": ["Python", "Streamlit", "FastAPI"],
-        "topics": ["data-engineering", "analytics"],
-        "category": "Data Engineering",
-        "html_url": "https://github.com/Shikher-jain/CampusPulse-Tracker",
-        "homepage": "https://campuspulse.streamlit.app",
-        "stars": 10,
+        "languages": ["Python", "Streamlit", "Plotly"],
+        "topics": ["sports-analytics", "data-viz"],
+        "category": "Analytics",
+        "html_url": "https://github.com/Shikher-jain/Streamlit-IPL-App",
+        "homepage": "https://ipl-analytics.streamlit.app",
+        "stars": 13,
+        "forks": 3,
+        "updated": "16 Apr 2025",
+    },
+    {
+        "name": "India_Census_App",
+        "description": (
+            "Census intelligence dashboard with district drilldowns, demographic KPIs, and geospatial plots."
+        ),
+        "languages": ["Python", "Streamlit", "Pandas"],
+        "topics": ["census", "dashboard"],
+        "category": "Data App",
+        "html_url": "https://github.com/Shikher-jain/India_Census_App",
+        "homepage": "https://india-census.streamlit.app",
+        "stars": 7,
         "forks": 1,
-        "updated": "11 Nov 2025",
+        "updated": "14 Sep 2025",
+    },
+    {
+        "name": "Sahayak_AI",
+        "description": (
+            "Voice-enabled assistant delivering bilingual answers with retrieval grounding and TTS playback."
+        ),
+        "languages": ["Python", "SpeechRecognition"],
+        "topics": ["voice", "rag", "assistant"],
+        "category": "Conversational AI",
+        "html_url": "https://github.com/Shikher-jain/Sahayak_AI",
+        "homepage": "https://sahayak-ai.streamlit.app",
+        "stars": 12,
+        "forks": 2,
+        "updated": "28 Nov 2025",
     },
 ]
 
