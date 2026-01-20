@@ -130,16 +130,16 @@ def _render_nav() -> None:
         ("resume", "Resume"),
         ("contact", "Contact"),
     ]
+    
     links = "".join(f"<a href='#{slug}'>{label}</a>" for slug, label in nav_items)
     logo_src = _image_data_uri(PROFILE.get("logo", ""))
     nav_markup = dedent(
         f"""
         <nav class='floating-nav'>
             <div class='nav-brand'>
-                <div class='nav-logo'>{f"<img src='{logo_src}' alt='logo' />" if PROFILE.get('logo') else '<span class="nav-eyebrow">Portfolio</span>'}</div>
-                <div>
-                    <span class='nav-name'>{PROFILE['name']}</span>
-                    <span class='nav-role'>{PROFILE['role']}</span>
+                <div class='nav-logo'>
+                    {f"<img src='{logo_src}' alt='logo' />" if PROFILE.get('logo')
+                      else '<span  class="nav-eyebrow">Portfolio</span>'}
                 </div>
             </div>
             <div class='nav-links'>{links}</div>
@@ -379,7 +379,8 @@ def _render_ml_lab() -> None:
 
 def main() -> None:
     st.set_page_config(
-        page_title="Shikher Jain · AI Engineer",
+        page_title="Shikher Jain Data Scientist & AI/ML Engineer",
+
         page_icon="🤖",
         layout="wide",
         initial_sidebar_state="collapsed",
