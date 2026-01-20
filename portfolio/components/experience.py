@@ -2,13 +2,10 @@
 from textwrap import dedent
 from typing import Dict, List
 
-import streamlit as st
 
-
-def render_experience(experiences: List[Dict]) -> None:
+def render_experience(experiences: List[Dict]) -> str:
     if not experiences:
-        st.info("Work experience will appear here once it's added.")
-        return
+        return ""
 
     cards = []
     for item in experiences:
@@ -30,4 +27,4 @@ def render_experience(experiences: List[Dict]) -> None:
             ).strip()
         )
 
-    st.markdown(f"<div class='experience-grid'>{''.join(cards)}</div>", unsafe_allow_html=True)
+    return f"<div class='experience-grid'>{''.join(cards)}</div>"

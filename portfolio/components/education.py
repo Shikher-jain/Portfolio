@@ -2,13 +2,10 @@
 from textwrap import dedent
 from typing import Dict, List
 
-import streamlit as st
 
-
-def render_education(education: List[Dict]) -> None:
+def render_education(education: List[Dict]) -> str:
     if not education:
-        st.info("Education details coming soon.")
-        return
+        return ""
 
     cards = []
     for item in education:
@@ -27,11 +24,11 @@ def render_education(education: List[Dict]) -> None:
             ).strip()
         )
 
-    st.markdown(f"<div class='education-grid'>{''.join(cards)}</div>", unsafe_allow_html=True)
+    return f"<div class='education-grid'>{''.join(cards)}</div>"
 
 
-def render_certifications(certifications: List[str]) -> None:
+def render_certifications(certifications: List[str]) -> str:
     if not certifications:
-        return
+        return ""
     chips = "".join(f"<span class='chip'>{cert}</span>" for cert in certifications)
-    st.markdown(f"<div class='cert-chip-row'>{chips}</div>", unsafe_allow_html=True)
+    return f"<div class='cert-chip-row'>{chips}</div>"

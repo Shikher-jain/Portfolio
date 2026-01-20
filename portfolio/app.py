@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import re
+from contextlib import contextmanager
 from pathlib import Path
 from textwrap import dedent
 from typing import Dict, List
@@ -154,6 +155,19 @@ def _anchor(slug: str) -> None:
     st.markdown(f"<span id='{slug}' class='section-anchor'></span>", unsafe_allow_html=True)
 
 
+@contextmanager
+def _section_shell(anchor: str | None = None, title: str | None = None) -> None:
+    if anchor:
+        _anchor(anchor)
+    container = st.container()
+    with container:
+        st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
+        if title:
+            st.markdown(f"<h2>{title}</h2>", unsafe_allow_html=True)
+        yield
+        st.markdown("</section>", unsafe_allow_html=True)
+
+
 def _social_cta(label: str, url: str) -> str:
     icon_url = get_social_icon_url(label)
     return (
@@ -228,19 +242,38 @@ def _render_about() -> None:
 
 def _render_experience() -> None:
     _anchor("experience")
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
-    st.subheader("Work Experience")
-    render_experience(EXPERIENCE)
-    st.markdown("</section>", unsafe_allow_html=True)
+    experience_markup = render_experience(EXPERIENCE)
+    if not experience_markup:
+        st.info("Work experience will appear here once it's added.")
+        return
+    st.markdown(
+        f"""
+        <section class='section-shell'>
+            <h2>Work Experience</h2>
+            {experience_markup}
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def _render_education_section() -> None:
     _anchor("education")
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
-    st.subheader("Education & Certifications")
-    render_education(EDUCATION)
-    render_certifications(CERTIFICATIONS)
-    st.markdown("</section>", unsafe_allow_html=True)
+    education_markup = render_education(EDUCATION)
+    cert_markup = render_certifications(CERTIFICATIONS)
+    if not education_markup and not cert_markup:
+        st.info("Add your education details to showcase degrees and certifications here.")
+        return
+    st.markdown(
+        f"""
+        <section class='section-shell'>
+            <h2>Education & Certifications</h2>
+            {education_markup}
+            {cert_markup}
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]:
@@ -397,15 +430,23 @@ def main() -> None:
     _anchor("about")
     _render_about()
 
+    _anchor("experience")
     _render_experience()
 
     _render_education_section()
 
     _anchor("skills")
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
-    st.subheader("Skills")
-    render_skills(SKILL_GROUPS)
-    st.markdown("</section>", unsafe_allow_html=True)
+    skills_markup = render_skills(SKILL_GROUPS)
+    st.markdown(
+        f"""
+        <section class='section-shell'>
+            <h2>Skills</h2>
+            {skills_markup}
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
 
     github_repos, showcased_projects = _render_projects(GITHUB_CONFIG["username"], GITHUB_CONFIG["topic"])
 
