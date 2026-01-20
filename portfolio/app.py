@@ -1,4 +1,3 @@
-"""Production-ready Streamlit portfolio for an AI/ML engineer."""
 from __future__ import annotations
 
 import base64
@@ -125,7 +124,23 @@ def _render_nav() -> None:
         ("contact", "Contact"),
     ]
     links = "".join(f"<a href='#{slug}'>{label}</a>" for slug, label in nav_items)
-    st.markdown(f"<nav class='sidebar-nav'>{links}</nav>", unsafe_allow_html=True)
+    logo_src = _image_data_uri(PROFILE.get("logo", ""))
+    nav_markup = dedent(
+        f"""
+        <nav class='floating-nav'>
+            <div class='nav-brand'>
+                <div class='nav-logo'>{f"<img src='{logo_src}' alt='logo' />" if PROFILE.get('logo') else '<span class="nav-eyebrow">Portfolio</span>'}</div>
+                <div>
+                    <span class='nav-name'>{PROFILE['name']}</span>
+                    <span class='nav-role'>{PROFILE['role']}</span>
+                </div>
+            </div>
+            <div class='nav-links'>{links}</div>
+            <a class='nav-cta' href='#contact'>Let's Talk</a>
+        </nav>
+        """
+    ).strip()
+    st.markdown(nav_markup, unsafe_allow_html=True)
 
 
 def _anchor(slug: str) -> None:
@@ -146,23 +161,36 @@ def _render_hero(summary: Dict) -> None:
     resume_href = f"data:application/pdf;base64,{resume_b64}" if resume_b64 else "#resume"
     resume_btn = f"<a class='solid-btn' href='{resume_href}' download>Download Resume</a>"
     avatar_src = _image_data_uri(PROFILE["avatar"])
+    hero_meta = "".join(
+        f"<div><p class='eyebrow'>{label}</p><h4>{value}</h4></div>"
+        for label, value in [
+            ("Location", PROFILE.get("location", "")),
+            ("Experience", PROFILE.get("experience", "")),
+            ("Email", PROFILE.get("email", "")),
+        ]
+        if value
+    )
 
     hero_markup = dedent(
         f"""
-        <section class='section-shell'>
-            <div class='hero-grid'>
-                <div class='hero-card'>
-                    <p class='eyebrow'>{PROFILE['availability']}</p>
-                    <h1>{PROFILE['name']}</h1>
-                    <h3>{PROFILE['role']}</h3>
-                    <p class='hero-bio'>{PROFILE['tagline']}</p>
-                    <div class='hero-actions'>{resume_btn}{ctas}</div>
-                    <div class='hero-stats'>{hero_stats}</div>
+        <section class='section-shell hero-section'>
+            <div class='hero-card hero-card--expanded'>
+                <div class='hero-top'>
+                    <div class='hero-avatar-card'>
+                        <img src='{avatar_src}' alt='Profile portrait' />
+                        <p class='avatar-caption'>{PROFILE['location']}</p>
+                    </div>
+                    <div class='hero-copy'>
+                        <p class='eyebrow'>{PROFILE['availability']}</p>
+                        <h1>{PROFILE['name']}</h1>
+                        <h3>{PROFILE['role']}</h3>
+                        <p class='hero-bio'>{PROFILE['tagline']}</p>
+                        <div class='hero-actions'>{resume_btn}{ctas}</div>
+                    </div>
                 </div>
-                <div>
-                    <img src='{avatar_src}' class='hero-avatar' alt='Profile portrait' />
-                </div>
+                <div class='hero-stats'>{hero_stats}</div>
             </div>
+            <div class='hero-meta-panel'>{hero_meta}</div>
         </section>
         """
     ).strip()
@@ -297,12 +325,10 @@ def main() -> None:
     _anchor("github")
     st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     st.subheader("GitHub Snapshot")
-    st.markdown("<h4 class='subtle-subhead'>Contribution activity</h4>", unsafe_allow_html=True)
+    st.markdown("<p class='subtle-subhead'>Contribution activity</p>", unsafe_allow_html=True)
 
     render_github_stats(summary_for_stats, repos)
     st.markdown("</section>", unsafe_allow_html=True)
-
-
     st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     _render_ml_lab()
     st.markdown("</section>", unsafe_allow_html=True)

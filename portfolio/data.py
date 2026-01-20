@@ -1,4 +1,3 @@
-"""Structured profile metadata consumed by the Streamlit portfolio app."""
 from datetime import date
 
 PROFILE = {
@@ -6,19 +5,31 @@ PROFILE = {
     "role": "Data Scientist & AI/ML Engineer",
     "tagline": "Entry-level ML engineer crafting RAG, vision, and NLP systems end to end.",
     "location": "Agra, Uttar Pradesh, India",
-    "experience": "B.Tech CSE · Class of 2026",
+    "experience": "B.Tech CSE | 2026",
     "email": "shikherjain786@gmail.com",
     "availability": "Open to data science internships, AI/ML fellowships, and freelance builds",
     "avatar": "assets/profile.png",
+    "logo": "assets/logo.png",
     "hero_stats": [
         {"label": "Projects Shipped", "value": "8+"},
         {"label": "Models Deployed", "value": "12"},
         {"label": "TCS CodeVita Rank", "value": "1040"}
     ],
     "socials": {
-        "GitHub": "https://github.com/Shikher-jain",
         "LinkedIn": "https://www.linkedin.com/in/shikher-jain-0bb8a8259/",
+        "YouTube": "https://www.youtube.com/@shikherjain0906",
         "Kaggle": "https://www.kaggle.com/shikherjain",
+        "LeetCode": "https://leetcode.com/u/shikherJain09/",
+        "HackerRank": "https://www.hackerrank.com/profile/shikherjain786",
+        "GeeksforGeeks": "https://www.geeksforgeeks.org/user/shikherj/",
+        "GitHub": "https://github.com/Shikher-jain",
+        "Hugging Face": "https://huggingface.co/Shikher09",
+        "Google Cloud Skill Boost": "https://www.cloudskillsboost.google/public_profiles/ec9eb266-a3ec-472d-a1ec-1015892b92f2",
+        "Credly": "https://www.credly.com/users/shikher-jain",
+        "Instagram": "https://www.instagram.com/shikher.09",
+        "X / Twitter": "https://x.com/shikherjain786",
+        "Stack Overflow": "https://stackoverflow.com/users/32228704/shikher-jain",
+        "Streamlit Cloud ": "https://share.streamlit.io/user/shikher-jain",
         "Resume": "assets/resume.pdf"
     }
 }
@@ -76,69 +87,103 @@ EXPERIENCE = [
     }
 ]
 
+
 SKILL_GROUPS = [
     {
         "category": "Programming Languages",
         "skills": [
-            {"name": "Python", "level": 95, "badges": ["NumPy", "Pandas"]},
-            {"name": "Java", "level": 78, "badges": ["DSA", "Backend"]},
-            {"name": "C", "level": 74, "badges": ["Systems", "Pointers"]}
+            {"name": "Python", "level": 95, "badges": ["OOP", "Data Structures", "Automation"]},
+            {"name": "Java", "level": 80, "badges": ["OOP", "Collections"]},
+            {"name": "C", "level": 75, "badges": ["Pointers", "Memory Management"]}
         ]
     },
+
     {
-        "category": "ML & Data Science",
+        "category": "Machine Learning & Data Science",
         "skills": [
-            {"name": "Data Preprocessing", "level": 90, "badges": ["Cleaning", "Pipelines"]},
-            {"name": "EDA & Feature Eng.", "level": 88, "badges": ["EDA", "Feature Scaling"]},
-            {"name": "scikit-learn", "level": 86, "badges": ["Modeling", "Evaluation"]}
+            {"name": "NumPy", "level": 90, "badges": ["Arrays", "Vectorization"]},
+            {"name": "Pandas", "level": 92, "badges": ["DataFrames", "Data Cleaning"]},
+            {"name": "Scikit-learn", "level": 88, "badges": ["Modeling", "Evaluation"]},
+            {"name": "Data Preprocessing", "level": 90, "badges": ["Missing Values", "Encoding"]},
+            {"name": "EDA", "level": 88, "badges": ["Visualization", "Insights"]},
+            {"name": "Feature Engineering", "level": 85, "badges": ["Scaling", "Selection"]}
         ]
     },
+
     {
-        "category": "Deep Learning & NLP",
+        "category": "Deep Learning & Artificial Intelligence",
         "skills": [
-            {"name": "PyTorch", "level": 92, "badges": ["Neural Nets", "Optimization"]},
-            {"name": "Transformer Models", "level": 85, "badges": ["Embeddings", "LoRA"]},
-            {"name": "NLP Pipelines", "level": 84, "badges": ["Tokenization", "Prompting"]}
+            {"name": "PyTorch", "level": 92, "badges": ["Autograd", "Training Loops"]},
+            {"name": "Neural Networks", "level": 90, "badges": ["MLP", "CNN", "RNN"]},
+            {"name": "Model Optimization", "level": 85, "badges": ["Schedulers", "Regularization"]}
         ]
     },
+
+    {
+        "category": "Natural Language Processing (NLP)",
+        "skills": [
+            {"name": "Text Preprocessing", "level": 90, "badges": ["Cleaning", "Normalization"]},
+            {"name": "Tokenization", "level": 88, "badges": ["BPE", "WordPiece"]},
+            {"name": "Embeddings", "level": 85, "badges": ["Word2Vec", "Sentence-BERT"]},
+            {"name": "Transformer Models", "level": 84, "badges": ["BERT", "LoRA", "Fine-tuning"]}
+        ]
+    },
+
     {
         "category": "Computer Vision",
         "skills": [
-            {"name": "OpenCV", "level": 90, "badges": ["Real-time", "LBPH"]},
-            {"name": "MediaPipe", "level": 82, "badges": ["Pose", "Holistic"]},
-            {"name": "Face & Pose Systems", "level": 80, "badges": ["Recognition", "Tracking"]}
+            {"name": "OpenCV", "level": 90, "badges": ["Image Processing", "Real-time"]},
+            {"name": "MediaPipe", "level": 85, "badges": ["Pose", "Hands", "Face Mesh"]},
+            {"name": "Face Recognition", "level": 82, "badges": ["LBPH", "Embeddings"]},
+            {"name": "Pose Estimation", "level": 80, "badges": ["Tracking", "Keypoints"]},
+            {"name": "Real-Time Vision Pipelines", "level": 78, "badges": ["Camera", "FPS Optimization"]}
         ]
     },
+
     {
-        "category": "Data Viz & Analytics",
+        "category": "Data Visualization & Analysis",
         "skills": [
-            {"name": "Matplotlib / Seaborn", "level": 82, "badges": ["Explainers", "Dashboards"]},
-            {"name": "Plotly", "level": 80, "badges": ["Interactive", "Maps"]},
-            {"name": "Tableau / Power BI", "level": 75, "badges": ["Storyboards", "KPIs"]}
+            {"name": "Matplotlib", "level": 85, "badges": ["Plots", "Explainers"]},
+            {"name": "Seaborn", "level": 82, "badges": ["Statistical Charts"]},
+            {"name": "Plotly", "level": 80, "badges": ["Interactive", "Dashboards"]},
+            {"name": "Tableau", "level": 75, "badges": ["Storytelling", "KPIs"]},
+            {"name": "Power BI", "level": 75, "badges": ["Reports", "DAX"]}
         ]
     },
+
     {
-        "category": "Web & APIs",
+        "category": "Web & API Development",
         "skills": [
-            {"name": "FastAPI", "level": 85, "badges": ["REST", "Async"]},
-            {"name": "Flask", "level": 80, "badges": ["Microservices"]},
-            {"name": "Streamlit", "level": 88, "badges": ["ML Demos"]}
+            {"name": "FastAPI", "level": 88, "badges": ["Async", "REST APIs"]},
+            {"name": "Flask", "level": 82, "badges": ["Microservices"]},
+            {"name": "Django", "level": 75, "badges": ["MVC", "Auth"]},
+            {"name": "RESTful APIs", "level": 90, "badges": ["CRUD", "JWT"]},
+            {"name": "Streamlit", "level": 92, "badges": ["Dashboards", "ML Apps"]}
         ]
     },
+
     {
-        "category": "Data Platforms & Tools",
+        "category": "Databases & Developer Tools",
         "skills": [
-            {"name": "MySQL / SQLite", "level": 82, "badges": ["Schema Design", "Queries"]},
-            {"name": "Git, GitHub, Docker", "level": 84, "badges": ["CI", "Containers"]},
-            {"name": "Jupyter / Colab / Kaggle", "level": 80, "badges": ["Notebooks", "Experiments"]}
+            {"name": "MySQL", "level": 82, "badges": ["Joins", "Indexes"]},
+            {"name": "SQLite", "level": 80, "badges": ["Embedded DB"]},
+            {"name": "Git & GitHub", "level": 88, "badges": ["Version Control", "CI/CD"]},
+            {"name": "Docker", "level": 82, "badges": ["Containers", "Deployment"]},
+            {"name": "Jupyter Notebook", "level": 90, "badges": ["EDA", "Experiments"]},
+            {"name": "Google Colab", "level": 88, "badges": ["GPU Training"]},
+            {"name": "Kaggle", "level": 85, "badges": ["Competitions", "Notebooks"]},
+            {"name": "Postman", "level": 80, "badges": ["API Testing"]}
         ]
     },
+
     {
-        "category": "Applied Math & Logic",
+        "category": "Applied Mathematics & Logical Foundations",
         "skills": [
-            {"name": "Linear Algebra", "level": 78, "badges": ["Vectors", "Matrices"]},
-            {"name": "Probability & Statistics", "level": 82, "badges": ["Distributions", "Inference"]},
-            {"name": "Rule-based Modeling", "level": 76, "badges": ["Logic", "Constraints"]}
+            {"name": "Linear Algebra", "level": 80, "badges": ["Vectors", "Matrices"]},
+            {"name": "Probability", "level": 82, "badges": ["Distributions", "Bayes"]},
+            {"name": "Statistics", "level": 85, "badges": ["Hypothesis Testing"]},
+            {"name": "Rule-based Logic", "level": 78, "badges": ["Conditions", "Inference"]},
+            {"name": "Mathematical Modeling", "level": 76, "badges": ["Formulation", "Optimization"]}
         ]
     }
 ]

@@ -3,6 +3,11 @@ from typing import Dict, List
 
 import streamlit as st
 
+CONTRIBUTION_GRAPH_URL = "https://github-readme-activity-graph.vercel.app/graph?username=Shikher-jain&theme=github-compact"
+GRAPH_WRAPPER_STYLE = "display:flex; justify-content:center;"
+GRAPH_CANVAS_STYLE = "max-width:960px; width:100%;"
+GRAPH_IMG_STYLE = "width:100%; height:auto; display:block;"
+
 
 def _repo_badges(repo: Dict) -> str:
     langs = repo.get("languages") or ["Python"]
@@ -13,27 +18,45 @@ def _repo_badges(repo: Dict) -> str:
 
 
 def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
-    if not summary:
-        st.warning("GitHub stats are temporarily unavailable.")
-        return
+    has_summary = bool(summary)
+    if not has_summary:
+        st.warning("GitHub stats are temporarily unavailable. Showing latest public graph instead.")
 
-    chart_url = summary.get("contribution_graph")
+    chart_url = summary.get("contribution_graph") if has_summary else None
     if chart_url:
         st.markdown(
-    f"""
-    <div style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-        <img src="{chart_url}" 
-             alt="GitHub contribution heatmap" 
-             loading="lazy"
-             style="max-width:100%; height:auto;" />
-        <figcaption style="margin-top:8px; color: #9CA3AF;">
-            365-day Streak Heatmap
-        </figcaption>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+            f"""
+            <div style="{GRAPH_WRAPPER_STYLE}">
+                <figure style="{GRAPH_CANVAS_STYLE}">
+                    <img src="{chart_url}" 
+                         alt="GitHub contribution heatmap" 
+                         loading="lazy"
+                         style="{GRAPH_IMG_STYLE}" />
+                    <figcaption style="margin-top:8px; color:#9CA3AF; text-align:center;">
+                        365-day Streak Heatmap
+                    </figcaption>
+                </figure>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
+    st.markdown(
+        f"""
+        <div style="{GRAPH_WRAPPER_STYLE}">
+            <figure style="{GRAPH_CANVAS_STYLE}">
+                <img src="{CONTRIBUTION_GRAPH_URL}" 
+                     alt="GitHub contribution graph"
+                     loading="lazy" 
+                     style="{GRAPH_IMG_STYLE}" />
+                <figcaption style="margin-top:8px; color:#9CA3AF; text-align:center;">
+                    365-day GitHub Contribution Graph
+                </figcaption>
+            </figure>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     if repos:
         st.markdown("<div class='repo-spotlight-shell'>", unsafe_allow_html=True)
