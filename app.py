@@ -437,6 +437,7 @@ def main() -> None:
 
     _anchor("skills")
     skills_markup = render_skills(SKILL_GROUPS)
+
     st.markdown(
         f"""
         <section class='section-shell'>
