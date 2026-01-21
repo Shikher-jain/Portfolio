@@ -127,9 +127,9 @@ def _render_nav() -> None:
         ("skills", "Skills"),
         ("projects", "Projects"),
         ("github", "GitHub"),
-        ("lab", "ML Lab"),
         ("resume", "Resume"),
         ("contact", "Contact"),
+        ("lab", "ML Lab"),
     ]
     
     links = "".join(f"<a href='#{slug}'>{label}</a>" for slug, label in nav_items)
@@ -137,12 +137,10 @@ def _render_nav() -> None:
     nav_markup = dedent(
         f"""
         <nav class='floating-nav'>
-            <div class='nav-brand'>
                 <div class='nav-logo'>
                     {f"<img src='{logo_src}' alt='logo' />" if PROFILE.get('logo')
                       else '<span  class="nav-eyebrow">Portfolio</span>'}
                 </div>
-            </div>
             <div class='nav-links'>{links}</div>
             <a class='nav-cta' href='#contact'>Let's Talk</a>
         </nav>
@@ -291,11 +289,9 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
         )
     with col_right:
         live_toggle = st.toggle("Live demos only", value=False, key="live-only-toggle")
-
     with st.spinner("Fetching projects from GitHub..."):
         github_repos = fetch_portfolio_repositories(username=username, topic=topic)
         github_repos = apply_live_demo_links(github_repos)
-
     featured_topic_tags = {tag.lower() for tag in FEATURED_TOPIC_TAGS} or {"feature"}
     shortlist_fallback_map = {key.lower(): value for key, value in SHORTLIST_FALLBACKS.items()}
     featured_candidates = [
@@ -304,9 +300,7 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
         if featured_topic_tags.issubset({topic.lower() for topic in repo.get("topics", [])})
     ]
     curated_featured = apply_live_demo_links(FEATURED_PROJECTS)
-
     using_github_feed = source_choice == "GitHub sync"
-
     dataset: List[Dict]
     if source_choice == "GitHub sync":
         dataset = github_repos
@@ -324,14 +318,12 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
             )
             dataset = curated_featured
         using_github_feed = False
-
     filtered = dataset
     if live_toggle:
         filtered = [repo for repo in dataset if repo.get("homepage")]
         if not filtered:
             st.warning("No live deployments yet for this view. Showing all projects instead.")
             filtered = dataset
-
     missing_shortlist: List[str] = []
     if using_github_feed and PROJECT_SHORTLIST:
         name_map = {repo.get("name", "").lower(): repo for repo in filtered}
@@ -356,7 +348,6 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
             fallback_matches = apply_live_demo_links(fallback_matches)
         if shortlist_matches or fallback_matches:
             filtered = shortlist_matches + fallback_matches
-
     if missing_shortlist and using_github_feed:
         st.caption(
             "Shortlisted repos not returned in this view: " + ", ".join(missing_shortlist)
