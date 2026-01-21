@@ -1,6 +1,9 @@
+pip-requirements
 streamlit
 requests
 streamlit-lottie
 streamlit-extras
 markdown
 pillow
+
+# SQLite is part of Python's standard library, no installation required

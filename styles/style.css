@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
+/* Root Configuration */
 :root {
     --bg: #0B0F19;
     --panel: rgba(255, 255, 255, 0.06);
@@ -11,15 +12,33 @@
     --glow: rgba(99, 102, 241, 0.35);
 }
 
+/* Font Configuration */
 body {
-    background: radial-gradient(circle at 15% 10%, rgba(34, 211, 238, 0.18), transparent 45%),
-        radial-gradient(circle at 80% 0, var(--glow), transparent 55%),
-        var(--bg);
+    font-family: 'Roboto', sans-serif; /* Default font */
+    background: radial-gradient(circle at 15% 10%, rgba(34, 211, 238, 0.18), transparent 45%), var(--bg);
     color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
     overflow-y: scroll;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif; /* Heading font */
+}
+
+p, span, a {
+    font-family: 'Open Sans', sans-serif; /* Paragraph font */
+    text-decoration: none;
+
+}
+
+blockquote {
+    font-family: 'Lato', sans-serif; /* Blockquote font */
+}
+
+.nav-cta, .ghost-btn, .solid-btn {
+    font-family: 'Space Grotesk', sans-serif; /* Special buttons */
+}
+
+/* Scrollbar Styling */
 body::-webkit-scrollbar {
     width: 10px;
 }
@@ -33,6 +52,7 @@ body::-webkit-scrollbar-thumb {
     border-radius: 999px;
 }
 
+/* Layout Configuration */
 .app-shell {
     max-width: 1200px;
     margin: 0 auto;
@@ -48,22 +68,9 @@ body::-webkit-scrollbar-thumb {
     margin-bottom: 2rem;
     box-shadow: 0 30px 80px rgba(5, 7, 18, 0.7);
     backdrop-filter: blur(18px);
-    background: linear-gradient(
-    135deg,
-    rgba(40, 45, 60, 0.9),
-    rgba(25, 30, 45, 0.9)
-  );
-  border-radius: 24px;
-  padding: 2.5rem;
-  margin-bottom: 3rem;
-
 }
 
-.section-anchor {
-    position: relative;
-    top: -80px;
-}
-
+/* Navigation Styling */
 .floating-nav {
     position: sticky;
     top: 1rem;
@@ -142,6 +149,7 @@ body::-webkit-scrollbar-thumb {
     text-decoration: none;
     font-size: 0.75rem;
     text-transform: uppercase;
+    
     letter-spacing: 0.25em;
     padding: 0.65rem 0.95rem;
     border-radius: 999px;
@@ -152,11 +160,13 @@ body::-webkit-scrollbar-thumb {
 .nav-links a:hover {
     color: var(--text);
     border-color: rgba(255, 255, 255, 0.18);
+    text-decoration: none;
     background: rgba(255, 255, 255, 0.06);
 }
 
 .nav-links a.is-active {
     color: #0b0f19;
+    text-decoration: none;
     background: linear-gradient(120deg, var(--accent), var(--accent-2));
     border-color: transparent;
     box-shadow: 0 10px 30px rgba(34, 211, 238, 0.35);
@@ -171,7 +181,6 @@ body::-webkit-scrollbar-thumb {
     text-transform: uppercase;
     letter-spacing: 0.25em;
     font-size: 0.75rem;
-    font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     text-decoration: none;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
@@ -266,6 +275,8 @@ body::-webkit-scrollbar-thumb {
 
     .nav-links a {
         flex: 1 1 auto;
+        text-decoration: none;
+
     }
 }
 

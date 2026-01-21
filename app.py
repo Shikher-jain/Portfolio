@@ -430,6 +430,7 @@ def main() -> None:
 
     _ensure_assets()
     _load_css()
+    
     _render_nav()
     st.markdown("<div class='app-shell'>", unsafe_allow_html=True)
 
@@ -437,14 +438,18 @@ def main() -> None:
     gh_summary = fetch_github_summary(GITHUB_CONFIG["username"])
     _render_hero(gh_summary)
 
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("about")
     _render_about()
 
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("experience")
     _render_experience()
 
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _render_education_section()
 
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("skills")
     skills_markup = render_skills(SKILL_GROUPS)
     st.markdown(
@@ -457,6 +462,7 @@ def main() -> None:
         unsafe_allow_html=True,
     )
 
+    st.markdown("<hr/>", unsafe_allow_html=True)
 
     github_repos, showcased_projects = _render_projects(GITHUB_CONFIG["username"], GITHUB_CONFIG["topic"])
 
@@ -468,7 +474,8 @@ def main() -> None:
         summary_for_stats.setdefault("total_stars", 0)
         summary_for_stats.setdefault("latest_repo", "")
 
-           
+
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("github")
     st.subheader("GitHub Snapshot")
     st.markdown("<p class='subtle-subhead'>Contribution activity</p>", unsafe_allow_html=True)
@@ -476,20 +483,21 @@ def main() -> None:
     spotlight_pool = showcased_projects or github_repos
     render_github_stats(summary_for_stats, spotlight_pool)
 
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _render_ml_lab()
-    st.markdown("</section>", unsafe_allow_html=True)
 
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("resume")
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     render_resume_section(RESUME)
-    st.markdown("</section>", unsafe_allow_html=True)
 
+
+    st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("contact")
     st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     render_contact_section(CONTACT)
     st.markdown("</section>", unsafe_allow_html=True)
 
-    # st.markdown("</div>", unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()

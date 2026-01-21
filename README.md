@@ -12,6 +12,7 @@
 - 🏆 **Kaggle Integration**
 - 📊 **Dynamic GitHub Stats**
 - 💼 **Professional Skills Section**
+- 🗄️ **SQLite Database Integration**: Contact form submissions are stored securely in a local SQLite database.
 
 ---
 
