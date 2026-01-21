@@ -276,7 +276,11 @@ def _render_education_section() -> None:
 
 def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]:
     _anchor("projects")
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
+
+    # st.markdown("""
+    #     <div class='card-container' style='background-color: #2c2c2c; padding: 20px; border-radius: 10px;'>
+    # """, unsafe_allow_html=True)
+
     st.subheader("Live Projects")
 
     col_left, col_right = st.columns([3, 1.6])
@@ -289,18 +293,23 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
         )
     with col_right:
         live_toggle = st.toggle("Live demos only", value=False, key="live-only-toggle")
+
     with st.spinner("Fetching projects from GitHub..."):
         github_repos = fetch_portfolio_repositories(username=username, topic=topic)
         github_repos = apply_live_demo_links(github_repos)
+
     featured_topic_tags = {tag.lower() for tag in FEATURED_TOPIC_TAGS} or {"feature"}
     shortlist_fallback_map = {key.lower(): value for key, value in SHORTLIST_FALLBACKS.items()}
+
     featured_candidates = [
         repo
         for repo in github_repos
         if featured_topic_tags.issubset({topic.lower() for topic in repo.get("topics", [])})
     ]
+
     curated_featured = apply_live_demo_links(FEATURED_PROJECTS)
     using_github_feed = source_choice == "GitHub sync"
+
     dataset: List[Dict]
     if source_choice == "GitHub sync":
         dataset = github_repos
@@ -318,17 +327,20 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
             )
             dataset = curated_featured
         using_github_feed = False
+
     filtered = dataset
     if live_toggle:
         filtered = [repo for repo in dataset if repo.get("homepage")]
         if not filtered:
             st.warning("No live deployments yet for this view. Showing all projects instead.")
             filtered = dataset
+
     missing_shortlist: List[str] = []
     if using_github_feed and PROJECT_SHORTLIST:
         name_map = {repo.get("name", "").lower(): repo for repo in filtered}
         shortlist_matches: List[Dict] = []
         fallback_matches: List[Dict] = []
+
         for desired in PROJECT_SHORTLIST:
             key = desired.lower()
             match = name_map.get(key)
@@ -344,10 +356,13 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
                         fallback_matches.append({**fallback})
                     else:
                         missing_shortlist.append(desired)
+
         if fallback_matches:
             fallback_matches = apply_live_demo_links(fallback_matches)
+
         if shortlist_matches or fallback_matches:
             filtered = shortlist_matches + fallback_matches
+
     if missing_shortlist and using_github_feed:
         st.caption(
             "Shortlisted repos not returned in this view: " + ", ".join(missing_shortlist)
@@ -355,7 +370,11 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
 
     render_project_cards(filtered)
     st.caption(f"{len(filtered)} projects - {source_choice}")
-    st.markdown("</section>", unsafe_allow_html=True)
+
+    # st.markdown("""
+    #     </div>
+    # """, unsafe_allow_html=True)
+
     return github_repos, filtered
 
 
@@ -404,11 +423,11 @@ def _render_ml_lab() -> None:
 def main() -> None:
     st.set_page_config(
         page_title="Shikher Jain Data Scientist & AI/ML Engineer",
-
-        page_icon="🤖",
+        page_icon="assets/logo-SJ.png",
         layout="wide",
         initial_sidebar_state="collapsed",
     )
+
     _ensure_assets()
     _load_css()
     _render_nav()
@@ -428,7 +447,6 @@ def main() -> None:
 
     _anchor("skills")
     skills_markup = render_skills(SKILL_GROUPS)
-
     st.markdown(
         f"""
         <section class='section-shell'>
@@ -450,15 +468,14 @@ def main() -> None:
         summary_for_stats.setdefault("total_stars", 0)
         summary_for_stats.setdefault("latest_repo", "")
 
+           
     _anchor("github")
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     st.subheader("GitHub Snapshot")
     st.markdown("<p class='subtle-subhead'>Contribution activity</p>", unsafe_allow_html=True)
 
     spotlight_pool = showcased_projects or github_repos
     render_github_stats(summary_for_stats, spotlight_pool)
-    st.markdown("</section>", unsafe_allow_html=True)
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
+
     _render_ml_lab()
     st.markdown("</section>", unsafe_allow_html=True)
 
@@ -472,8 +489,7 @@ def main() -> None:
     render_contact_section(CONTACT)
     st.markdown("</section>", unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
+    # st.markdown("</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()

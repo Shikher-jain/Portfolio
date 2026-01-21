@@ -46,7 +46,6 @@ def _build_card(project: Dict) -> str:
                 <div class='card-face card-front'>
                     <div class='card-header'>
                         {topic_html}
-                        <div class='card-updated'>Updated {escape(project.get('updated', ''))}</div>
                     </div>
                     <h3>{escape(project.get('name', 'Project'))}</h3>
                     <p class='card-copy'>{front_excerpt}</p>

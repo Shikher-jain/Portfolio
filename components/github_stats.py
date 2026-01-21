@@ -1,9 +1,8 @@
 """Visual components for GitHub stats."""
 from typing import Dict, List
-
 import streamlit as st
 
-CONTRIBUTION_GRAPH_URL = "https://github-readme-activity-graph.vercel.app/graph?username=Shikher-jain&theme=github-compact"
+CONTRIBUTION_GRAPH_URL = "https://github-readme-activity-graph.vercel.app/graph?username=Shikher-jain&theme=tokyo-night&hide_border=true"
 GRAPH_WRAPPER_STYLE = "display:flex; justify-content:center;"
 GRAPH_CANVAS_STYLE = "max-width:960px; width:100%;"
 GRAPH_IMG_STYLE = "width:100%; height:auto; display:block;"
@@ -26,6 +25,7 @@ def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
     if chart_url:
         st.markdown(
             f"""
+        <section class='section-shell'>
             <div style="{GRAPH_WRAPPER_STYLE}">
                 <figure style="{GRAPH_CANVAS_STYLE}">
                     <img src="{chart_url}" 
@@ -37,12 +37,7 @@ def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
                     </figcaption>
                 </figure>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    st.markdown(
-        f"""
+        
         <div style="{GRAPH_WRAPPER_STYLE}">
             <figure style="{GRAPH_CANVAS_STYLE}">
                 <img src="{CONTRIBUTION_GRAPH_URL}" 
@@ -54,10 +49,12 @@ def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
                 </figcaption>
             </figure>
         </div>
+        </section>
         """,
         unsafe_allow_html=True,
     )
 
+'''
     if repos:
         st.markdown("<div class='repo-spotlight-shell'>", unsafe_allow_html=True)
         names = [repo.get("name", "") for repo in repos]
@@ -81,14 +78,11 @@ def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
                     <div class='stats-row'>
                         <span class='stat-pill'>⭐ {chosen.get('stars', 2)}</span>
                         <span class='stat-pill'>🍴 {chosen.get('forks', 1)}</span>
-                        <span class='stat-pill'>Updated {chosen.get('updated')}</span>
                     </div>
                     <div class='card-actions'>
                         <a class='ghost-btn' href='{chosen.get('html_url')}' target='_blank' rel='noopener'>GitHub</a>
                         {f"<a class='solid-btn' href='{chosen.get('homepage')}' target='_blank' rel='noopener'>Live</a>" if chosen.get('homepage') else ''}
-                    </div>
-                </div>
                 """,
                 unsafe_allow_html=True,
             )
-        st.markdown("</div>", unsafe_allow_html=True)
+'''
