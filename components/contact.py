@@ -8,9 +8,13 @@ from .social_icons import get_social_icon_url
 import mysql.connector
 from dotenv import load_dotenv
 import os
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def _social_icon_html(label: str) -> str:
@@ -71,15 +75,16 @@ def render_contact_section(contact: dict[str, str]) -> None:
             else:
                 # Insert data into the MySQL database
                 conn = get_db_connection()
-                cursor = conn.cursor()
-                cursor.execute(
-                    "INSERT INTO contact_form (name, email, message) VALUES (%s, %s, %s)",
-                    (name, email, message)
-                )
-                conn.commit()
-                conn.close()
+                if conn:
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        "INSERT INTO contact_form (name, email, message) VALUES (%s, %s, %s)",
+                        (name, email, message)
+                    )
+                    conn.commit()
+                    conn.close()
 
-                st.success("Thanks for reaching out! I will reply within 2 business days.")
+                    st.success("Thanks for reaching out! I will reply within 2 business days.")
 
 
 # MySQL database configuration using environment variables
@@ -90,22 +95,33 @@ DB_CONFIG = {
     "database": os.getenv("DB_NAME", "portfolio")
 }
 
-# Establish a connection to the MySQL database
+# Establish a connection to the MySQL database with error handling
 def get_db_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+    try:
+        return mysql.connector.connect(**DB_CONFIG)
+    except mysql.connector.Error as err:
+        logging.error(f"Database connection failed: {err}")
+        st.error("Unable to connect to the database. Please try again later.")
+        return None
 
-# Ensure the table exists
-conn = get_db_connection()
-cursor = conn.cursor()
-cursor.execute(
-    """
-    CREATE TABLE IF NOT EXISTS contact_form (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        message TEXT NOT NULL,
-        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-    """
-)
-conn.close()
+# Ensure the table exists with error handling
+try:
+    conn = get_db_connection()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS contact_form (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                message TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        conn.commit()
+        conn.close()
+except mysql.connector.Error as err:
+    logging.error(f"Failed to ensure table exists: {err}")
+    st.error("Database setup failed. Please contact support.")
