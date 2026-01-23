@@ -86,36 +86,27 @@ def render_contact_section(contact: dict[str, str]) -> None:
 
                     st.success("Thanks for reaching out! I will reply within 2 business days.")
 
-
+# ====================================================================
 # MySQL database configuration using environment variables
+# ====================================================================
 
+# DB_CONFIG = {
+#     "host": os.getenv("DB_HOST", "localhost"),
+#     "user": os.getenv("DB_USER", "root"),
+#     "password": os.getenv("DB_PASSWORD", ""),
+#     "database": os.getenv("DB_NAME", "portfolio")
+# }
+
+
+# ====================================================================
+# Use Streamlit secrets for database configuration
+# ====================================================================
 DB_CONFIG = {
-    "host": os.getenv("DB_HOST", "localhost"),
-    "user": os.getenv("DB_USER", "root"),
-    "password": os.getenv("DB_PASSWORD", ""),
-    "database": os.getenv("DB_NAME", "portfolio")
+    "host": st.secrets["DB_HOST"],
+    "user": st.secrets["DB_USER"],
+    "password": st.secrets["DB_PASSWORD"],
+    "database": st.secrets["DB_NAME"]
 }
-
-# Add a toggle button for local or deployment configuration
-use_deployment = st.sidebar.radio(
-    "Select Database Configuration:",
-    ("Localhost", "Deployment")
-)
-
-if use_deployment == "Deployment":
-    DB_CONFIG = {
-        "host": st.secrets["DB_HOST"],
-        "user": st.secrets["DB_USER"],
-        "password": st.secrets["DB_PASSWORD"],
-        "database": st.secrets["DB_NAME"]
-    }
-else:
-    DB_CONFIG = {
-        "host": os.getenv("DB_HOST", "localhost"),
-        "user": os.getenv("DB_USER", "root"),
-        "password": os.getenv("DB_PASSWORD", ""),
-        "database": os.getenv("DB_NAME", "portfolio")
-    }
 
 
 # Establish a connection to the MySQL database with error handling
