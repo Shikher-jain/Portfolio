@@ -5,5 +5,7 @@ streamlit-lottie
 streamlit-extras
 markdown
 pillow
+mysql-connector-python
+python-dotenv
 
 # SQLite is part of Python's standard library, no installation required

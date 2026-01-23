@@ -5,9 +5,12 @@ import html
 from typing import Dict
 import streamlit as st
 from .social_icons import get_social_icon_url
-import sqlite3
-import atexit
-import threading
+import mysql.connector
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def _social_icon_html(label: str) -> str:
@@ -66,45 +69,43 @@ def render_contact_section(contact: dict[str, str]) -> None:
             if not (name and email and message):
                 st.error("Please complete all fields before sending.")
             else:
-                # Get a thread-local database connection
+                # Insert data into the MySQL database
                 conn = get_db_connection()
                 cursor = conn.cursor()
-
-                # Insert data into the database
                 cursor.execute(
-                    "INSERT INTO contact_form (name, email, message) VALUES (?, ?, ?)",
+                    "INSERT INTO contact_form (name, email, message) VALUES (%s, %s, %s)",
                     (name, email, message)
                 )
                 conn.commit()
+                conn.close()
 
                 st.success("Thanks for reaching out! I will reply within 2 business days.")
 
-# Use thread-local storage for SQLite connections
-thread_local = threading.local()
 
+# MySQL database configuration using environment variables
+DB_CONFIG = {
+    "host": os.getenv("DB_HOST", "localhost"),
+    "user": os.getenv("DB_USER", "root"),
+    "password": os.getenv("DB_PASSWORD", ""),
+    "database": os.getenv("DB_NAME", "portfolio")
+}
+
+# Establish a connection to the MySQL database
 def get_db_connection():
-    if not hasattr(thread_local, "connection"):
-        thread_local.connection = sqlite3.connect(DB_PATH, check_same_thread=False)
-    return thread_local.connection
+    return mysql.connector.connect(**DB_CONFIG)
 
-# Initialize database connection
-DB_PATH = "contact_form.db"
-conn = sqlite3.connect(DB_PATH)
+# Ensure the table exists
+conn = get_db_connection()
 cursor = conn.cursor()
-
-# Create table if it doesn't exist
 cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS contact_form (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
         message TEXT NOT NULL,
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """
 )
-conn.commit()
-
-# Register a function to close the database connection at exit
-atexit.register(lambda: conn.close())
+conn.close()
