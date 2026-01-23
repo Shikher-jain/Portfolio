@@ -5,7 +5,7 @@ import html
 from typing import Dict
 import streamlit as st
 from .social_icons import get_social_icon_url
-import mysql.connector
+import psycopg2
 from dotenv import load_dotenv
 import os
 import logging
@@ -73,7 +73,7 @@ def render_contact_section(contact: dict[str, str]) -> None:
             if not (name and email and message):
                 st.error("Please complete all fields before sending.")
             else:
-                # Insert data into the MySQL database
+                # Insert data into the PostgreSQL database
                 conn = get_db_connection()
                 if conn:
                     cursor = conn.cursor()
@@ -86,34 +86,19 @@ def render_contact_section(contact: dict[str, str]) -> None:
 
                     st.success("Thanks for reaching out! I will reply within 2 business days.")
 
-# ====================================================================
-# MySQL database configuration using environment variables
-# ====================================================================
-
-# DB_CONFIG = {
-#     "host": os.getenv("DB_HOST", "localhost"),
-#     "user": os.getenv("DB_USER", "root"),
-#     "password": os.getenv("DB_PASSWORD", ""),
-#     "database": os.getenv("DB_NAME", "portfolio")
-# }
-
-
-# ====================================================================
-# Use Streamlit secrets for database configuration
-# ====================================================================
-DB_CONFIG = {
-    "host": st.secrets["DB_HOST"],
-    "user": st.secrets["DB_USER"],
-    "password": st.secrets["DB_PASSWORD"],
-    "database": st.secrets["DB_NAME"]
-}
-
-
-# Establish a connection to the MySQL database with error handling
+# Establish a connection to the PostgreSQL database with error handling
 def get_db_connection():
     try:
-        return mysql.connector.connect(**DB_CONFIG)
-    except mysql.connector.Error as err:
+        return psycopg2.connect(
+        host=st.secrets["DB_HOST"],
+        database=st.secrets["DB_NAME"],
+        user=st.secrets["DB_USER"],
+        password=st.secrets["DB_PASSWORD"],
+        port=st.secrets["DB_PORT"],
+        sslmode="require"
+    )
+
+    except psycopg2.Error as err:
         logging.error(f"Database connection failed: {err}")
         st.error("Unable to connect to the database. Please try again later.")
         return None
@@ -126,16 +111,16 @@ try:
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS contact_form (
-                id INT AUTO_INCREMENT PRIMARY KEY,
+                id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 email VARCHAR(255) NOT NULL,
                 message TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
+            )
             """
         )
         conn.commit()
         conn.close()
-except mysql.connector.Error as err:
+except psycopg2.Error as err:
     logging.error(f"Failed to ensure table exists: {err}")
     st.error("Database setup failed. Please contact support.")

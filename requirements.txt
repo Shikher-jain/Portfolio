@@ -7,5 +7,6 @@ markdown
 pillow
 mysql-connector-python
 python-dotenv
+psycopg2
 
 # SQLite is part of Python's standard library, no installation required
