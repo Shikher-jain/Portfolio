@@ -5,7 +5,6 @@ streamlit-lottie
 streamlit-extras
 markdown
 pillow
-mysql
 mysql-connector-python
 python-dotenv
 
