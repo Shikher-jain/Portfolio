@@ -492,9 +492,7 @@ def main() -> None:
 
     st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("contact")
-    st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
     render_contact_section(CONTACT)
-    st.markdown("</section>", unsafe_allow_html=True)
 
 
 

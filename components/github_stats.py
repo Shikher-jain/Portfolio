@@ -51,7 +51,7 @@ def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
         """,
         unsafe_allow_html=True,
     )
-
+    st.markdown("<hr/>", unsafe_allow_html=True)
     with st.expander("Repo Spotlight"):               
         if repos:
             st.markdown("<div class='repo-spotlight-shell'>", unsafe_allow_html=True)
@@ -66,21 +66,21 @@ def render_github_stats(summary: Dict, repos: List[Dict] | None = None) -> None:
             if chosen:
                 st.markdown(
                     f"""
-                    <div class='repo-spotlight'>
-                        <div class='spotlight-header'>
-                            <p class='eyebrow'>{chosen.get('category', 'Applied AI')}</p>
-                            <h4>{chosen.get('name')}</h4>
-                        </div>
-                        <p class='card-copy'>{chosen.get('description')}</p>
-                        <div class='badge-row'>{_repo_badges(chosen)}</div>
-                        <div class='stats-row'>
-                            <span class='stat-pill'>⭐ {chosen.get('stars', 2)}</span>
-                            <span class='stat-pill'>🍴 {chosen.get('forks', 1)}</span>
-                        </div>
-                        <div class='card-actions'>
-                            <a class='ghost-btn' href='{chosen.get('html_url')}' target='_blank' rel='noopener'>GitHub</a>
-                            {f"<a class='solid-btn' href='{chosen.get('homepage')}' target='_blank' rel='noopener'>Live</a>" if chosen.get('homepage') else ''}
-                    """,
-                    unsafe_allow_html=True,
-                )
+    <div class='repo-spotlight'>
+        <div class='spotlight-header'>
+            <p class='eyebrow'>{chosen.get('category', 'Applied AI')}</p>
+            <h4>{chosen.get('name')}</h4>
+        </div>
+        <p class='card-copy'>{chosen.get('description')}</p>
+        <div class='badge-row'>{_repo_badges(chosen)}</div>
+        <div class='stats-row'>
+            <span class='stat-pill'>⭐ {chosen.get('stars', 2)}</span>
+            <span class='stat-pill'>🍴 {chosen.get('forks', 1)}</span>
+        </div>
+        <div class='card-actions'>
+            <a class='ghost-btn' href='{chosen.get('html_url')}' target='_blank' rel='noopener'>GitHub</a>
+            {f"<a class='solid-btn' href='{chosen.get('homepage')}' target='_blank' rel='noopener'>Live</a>" if chosen.get('homepage') else ''}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 

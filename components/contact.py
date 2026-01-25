@@ -9,9 +9,6 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 import logging
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 # Load environment variables from .env file
 load_dotenv()
@@ -26,6 +23,7 @@ def _social_icon_html(label: str) -> str:
 
 
 def render_contact_section(contact: dict[str, str]) -> None:
+    # Updated to ensure proper escaping of '&amp;' characters in dynamic content.
     location = html.escape(contact.get("location", "Remote"))
     availability = html.escape(contact.get("availability", "Currently onboarding new AI initiatives."))
     email = html.escape(contact.get("email", "shikherjain786@gmail.com"))
@@ -37,8 +35,10 @@ def render_contact_section(contact: dict[str, str]) -> None:
         for name, url in contact.get('socials', {}).items()
     )
 
+
     st.markdown(
         f"""
+        <section class='section-shell'>
         <div class='contact-card'>
             <div>
                 <p class='eyebrow'>Based in</p>
@@ -46,12 +46,18 @@ def render_contact_section(contact: dict[str, str]) -> None:
                 <p>{availability}</p>
                 <div class='contact-chip-row'>
                     <a class="ghost-btn"
-                    href="mailto:{email}?subject=Hello%20Shikher"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Send email">
-                    Send Email
+                       href="mailto:{email}?subject=Hello%20Shikher"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       aria-label="Send email">
+                       Send Email
                     </a>
+                    <a class="ghost-btn"
+                    href="mailto:{email}?subject=Portfolio%20Inquiry&amp;body=Hi%20Shikher,%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20connect.%0A%0ARegards,"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                       Contact Me
+                    </>
                     <a class='ghost-btn'
                        href='{calendly}'
                        target='_blank'
@@ -62,9 +68,12 @@ def render_contact_section(contact: dict[str, str]) -> None:
                 <div class='social-list'>{socials_html}</div>
             </div>
         </div>
-        """,
-        unsafe_allow_html=True,  # Ensure raw HTML is rendered
-    )
+        </section>
+        """, unsafe_allow_html=True
+    ) # Ensure raw HTML is rendered
+
+
+    st.markdown("<hr/>", unsafe_allow_html=True)
 
     with st.form("contact-form", clear_on_submit=True):
         st.write("### Contact Form")
@@ -87,21 +96,17 @@ def render_contact_section(contact: dict[str, str]) -> None:
                     conn.commit()
                     conn.close()
 
-                # Send email notification
-                if send_email(name, email, message):
                     st.success("Thanks for reaching out! I will reply within 2 business days.")
-                else:
-                    st.error("Failed to send email. Please try again later.")
 
 # Establish a connection to the PostgreSQL database with error handling
 def get_db_connection():
     try:
         return psycopg2.connect(
-        host=st.secrets["DB_HOST"],
-        database=st.secrets["DB_NAME"],
-        user=st.secrets["DB_USER"],
-        password=st.secrets["DB_PASSWORD"],
-        port=st.secrets["DB_PORT"],
+            host=st.secrets['DB']["DB_HOST"],
+        database=st.secrets['DB']["DB_NAME"],
+        user=st.secrets['DB']["DB_USER"],
+        password=st.secrets['DB']["DB_PASSWORD"],
+        port=st.secrets['DB']["DB_PORT"],
         sslmode="require"
     )
 
@@ -109,34 +114,6 @@ def get_db_connection():
         logging.error(f"Database connection failed: {err}")
         st.error("Unable to connect to the database. Please try again later.")
         return None
-
-# Function to send email using SMTP
-def send_email(name: str, email: str, message: str) -> bool:
-    try:
-        smtp_server = os.getenv("SMTP_SERVER")
-        smtp_port = int(os.getenv("SMTP_PORT", 587))
-        smtp_user = os.getenv("SMTP_USER")
-        smtp_password = os.getenv("SMTP_PASSWORD")
-        
-        # Create the email
-        msg = MIMEMultipart()
-        msg['From'] = smtp_user
-        msg['To'] = smtp_user  # Send to yourself
-        msg['Subject'] = f"New Contact Form Submission from {name}"
-
-        body = f"Name: {name}\nEmail: {email}\nMessage: {message}"
-        msg.attach(MIMEText(body, 'plain'))
-
-        # Connect to the SMTP server and send the email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_password)
-            server.send_message(msg)
-
-        return True
-    except Exception as e:
-        logging.error(f"Failed to send email: {e}")
-        return False
 
 # Ensure the table exists with error handling
 try:
