@@ -8,7 +8,6 @@ from typing import Dict
 
 import streamlit as st
 
-
 @lru_cache(maxsize=1)
 def load_resume_base64(resume_path: str) -> str | None:
     path = Path(resume_path)
@@ -45,12 +44,11 @@ def render_resume_section(resume: Dict) -> None:
 
 
 def render_floating_cta(resume: Dict) -> None:
-    b64_pdf = load_resume_base64(resume.get("path", ""))
-    if not b64_pdf:
-        return
+    resume_url = "https://github.com/Shikher-jain/Portfolio/blob/main/assets/resume.pdf"
+    
     st.markdown(
         f"""
-        <a class='floating-resume-cta' href='data:application/pdf;base64,{b64_pdf}' download='{resume.get('file_name')}'>
+        <a class='floating-resume-cta' href='{resume_url}' download='{resume.get('file_name')}'>
             ⬇ Resume
         </a>
         """,

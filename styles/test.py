@@ -50,3 +50,5 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+st.markdown('''<a class='floating-resume-cta' href='data:application/pdf;base64,{b64_pdf}' download='{resume.get('file_name')}'>⬇ Resume</a>''', unsafe_allow_html=True)
