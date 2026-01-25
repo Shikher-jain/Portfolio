@@ -63,12 +63,24 @@ def _ensure_assets() -> None:
     # Ensure essential assets like profile picture and resume exist.
     assets_dir = Path(__file__).parent / "assets"
     assets_dir.mkdir(parents=True, exist_ok=True)
+
+    # Ensure profile picture exists
     avatar_path = assets_dir / "profile.png"
     if not avatar_path.exists() or avatar_path.stat().st_size == 0:
-        placeholder_png = (
+        placeholder_avatar = (
             "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAACENnwnAAAAD0lEQVR42mNk+M/AwMAAAjUAmzquw3YAAAAASUVORK5CYII="
         )
-        avatar_path.write_bytes(base64.b64decode(placeholder_png))
+        avatar_path.write_bytes(base64.b64decode(placeholder_avatar))
+
+    # Ensure logo exists
+    logo_path = assets_dir / "logo.png"
+    if not logo_path.exists() or logo_path.stat().st_size == 0:
+        placeholder_logo = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAACENnwnAAAAD0lEQVR42mNk+M/AwMAAAjUAmzquw3YAAAAASUVORK5CYII="
+        )
+        logo_path.write_bytes(base64.b64decode(placeholder_logo))
+
+    # Ensure resume exists
     resume_path = assets_dir / "resume.pdf"
     if not resume_path.exists() or resume_path.stat().st_size == 0:
         # Placeholder for resume handling logic.
@@ -78,8 +90,10 @@ def _image_data_uri(path_str: str) -> str:
     # Convert image file to a data URI for embedding in HTML.
     path = Path(path_str)
     if path.exists():
-        # Logic for encoding image as data URI.
-        pass
+        mime_type = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
+        with path.open("rb") as image_file:
+            base64_data = base64.b64encode(image_file.read()).decode("utf-8")
+        return f"data:{mime_type};base64,{base64_data}"
     return path_str
 
 def _lexicon_sentiment(text: str) -> tuple[str, float]:
@@ -463,7 +477,6 @@ def main() -> None:
     else:
         summary_for_stats.setdefault("total_stars", 0)
         summary_for_stats.setdefault("latest_repo", "")
-
 
     st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("github")

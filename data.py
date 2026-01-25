@@ -11,7 +11,7 @@ PROFILE = {
     "avatar": "assets/profile.png",
     "logo": "assets/logo.png",
     "hero_stats": [
-        {"label": "Projects Shipped", "value": "8+"},
+        {"label": "Projects Shipped", "value": "10+"},
         {"label": "Models Deployed", "value": "12"},
         {"label": "TCS CodeVita Rank", "value": "1040"}
     ],
