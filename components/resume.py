@@ -45,13 +45,14 @@ def render_resume_section(resume: Dict) -> None:
 
 
 def render_floating_cta(resume: Dict) -> None:
-    resume_url = "https://raw.githubusercontent.com/Shikher-jain/Portfolio/main/assets/resume.pdf"  # Raw file URL
+    b64_pdf = load_resume_base64(resume.get("path", ""))
+    if not b64_pdf:
+        st.error("Resume file is missing.")
+        return
 
-    st.markdown(
-        f"""
-        <a class='floating-resume-cta' href='{resume_url}' download='{resume.get('file_name')}'>
-            ⬇ Resume
-        </a>
-        """,
-        unsafe_allow_html=True,
+    st.download_button(
+        label="⬇ Resume",
+        data=base64.b64decode(b64_pdf),
+        file_name=resume.get("file_name"),
+        mime="application/pdf",
     )
