@@ -9,6 +9,9 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 import logging
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Load environment variables from .env file
 load_dotenv()
@@ -84,7 +87,11 @@ def render_contact_section(contact: dict[str, str]) -> None:
                     conn.commit()
                     conn.close()
 
+                # Send email notification
+                if send_email(name, email, message):
                     st.success("Thanks for reaching out! I will reply within 2 business days.")
+                else:
+                    st.error("Failed to send email. Please try again later.")
 
 # Establish a connection to the PostgreSQL database with error handling
 def get_db_connection():
@@ -102,6 +109,34 @@ def get_db_connection():
         logging.error(f"Database connection failed: {err}")
         st.error("Unable to connect to the database. Please try again later.")
         return None
+
+# Function to send email using SMTP
+def send_email(name: str, email: str, message: str) -> bool:
+    try:
+        smtp_server = os.getenv("SMTP_SERVER")
+        smtp_port = int(os.getenv("SMTP_PORT", 587))
+        smtp_user = os.getenv("SMTP_USER")
+        smtp_password = os.getenv("SMTP_PASSWORD")
+        
+        # Create the email
+        msg = MIMEMultipart()
+        msg['From'] = smtp_user
+        msg['To'] = smtp_user  # Send to yourself
+        msg['Subject'] = f"New Contact Form Submission from {name}"
+
+        body = f"Name: {name}\nEmail: {email}\nMessage: {message}"
+        msg.attach(MIMEText(body, 'plain'))
+
+        # Connect to the SMTP server and send the email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.send_message(msg)
+
+        return True
+    except Exception as e:
+        logging.error(f"Failed to send email: {e}")
+        return False
 
 # Ensure the table exists with error handling
 try:
