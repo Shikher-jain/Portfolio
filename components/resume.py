@@ -1,4 +1,3 @@
-"""Resume presentation helpers."""
 from __future__ import annotations
 
 import base64
@@ -12,10 +11,12 @@ import streamlit as st
 def load_resume_base64(resume_path: str) -> str | None:
     path = Path(resume_path)
     if not path.exists():
+        st.error("Resume file is missing. Please add it to the specified path and refresh.")
         return None
     with path.open("rb") as pdf_file:
         pdf_bytes = pdf_file.read()
     return base64.b64encode(pdf_bytes).decode("utf-8")
+    
 
 
 def render_resume_section(resume: Dict) -> None:
@@ -44,8 +45,8 @@ def render_resume_section(resume: Dict) -> None:
 
 
 def render_floating_cta(resume: Dict) -> None:
-    resume_url = "https://github.com/Shikher-jain/Portfolio/blob/main/assets/resume.pdf"
-    
+    resume_url = "https://raw.githubusercontent.com/Shikher-jain/Portfolio/main/assets/resume.pdf"  # Raw file URL
+
     st.markdown(
         f"""
         <a class='floating-resume-cta' href='{resume_url}' download='{resume.get('file_name')}'>
