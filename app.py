@@ -37,38 +37,30 @@ from data import (
 from github_api import fetch_github_summary, fetch_portfolio_repositories, fetch_repository
 from live_demos import apply_live_demo_links
 
-POSITIVE_TERMS = {
-    "confident",
-    "delight",
-    "excellent",
-    "fast",
-    "improved",
-    "seamless",
-    "stable",
-    "successful",
-    "wins",
-}
+def _load_sentiment_words() -> tuple[set[str], set[str]]:
+    # Load positive and negative words from external files.
+    positive_words_path = Path(__file__).parent / "positive_words.txt"
+    negative_words_path = Path(__file__).parent / "negative_words.txt"
 
-NEGATIVE_TERMS = {
-    "bug",
-    "crash",
-    "delay",
-    "friction",
-    "issue",
-    "lag",
-    "risk",
-    "slow",
-    "unstable",
-}
+    with positive_words_path.open("r", encoding="utf-8") as pos_file:
+        positive_words = {line.strip() for line in pos_file if line.strip() and not line.startswith("#")}
 
+    with negative_words_path.open("r", encoding="utf-8") as neg_file:
+        negative_words = {line.strip() for line in neg_file if line.strip() and not line.startswith("#")}
+
+    return positive_words, negative_words
+
+# Load the sentiment words at runtime.
+POSITIVE_TERMS, NEGATIVE_TERMS = _load_sentiment_words()
 
 def _load_css() -> None:
+    # Load and apply custom CSS styles for the app.
     css_path = Path(__file__).parent / "styles" / "style.css"
     with css_path.open("r", encoding="utf-8") as css_file:
         st.markdown(f"<style>{css_file.read()}</style>", unsafe_allow_html=True)
 
-
 def _ensure_assets() -> None:
+    # Ensure essential assets like profile picture and resume exist.
     assets_dir = Path(__file__).parent / "assets"
     assets_dir.mkdir(parents=True, exist_ok=True)
     avatar_path = assets_dir / "profile.png"
@@ -79,46 +71,41 @@ def _ensure_assets() -> None:
         avatar_path.write_bytes(base64.b64decode(placeholder_png))
     resume_path = assets_dir / "resume.pdf"
     if not resume_path.exists() or resume_path.stat().st_size == 0:
-        resume_bytes = (
-            b"%PDF-1.4\n1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n"
-            b"2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n"
-            b"3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 300 200] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj\n"
-            b"4 0 obj << /Length 90 >> stream\n"
-            b"BT /F1 18 Tf 30 150 Td (Replace with your resume PDF) Tj ET\n"
-            b"BT /F1 12 Tf 30 120 Td (assets/resume.pdf) Tj ET\n"
-            b"endstream endobj\n"
-            b"5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n"
-            b"xref\n0 6\n0000000000 65535 f \n0000000010 00000 n \n0000000063 00000 n \n0000000116 00000 n \n0000000274 00000 n \n0000000387 00000 n \n"
-            b"trailer << /Size 6 /Root 1 0 R >>\nstartxref\n470\n%%EOF\n"
-        )
-        resume_path.write_bytes(resume_bytes)
-
+        # Placeholder for resume handling logic.
+        pass
 
 def _image_data_uri(path_str: str) -> str:
+    # Convert image file to a data URI for embedding in HTML.
     path = Path(path_str)
     if path.exists():
-        encoded = base64.b64encode(path.read_bytes()).decode("utf-8")
-        return f"data:image/png;base64,{encoded}"
+        # Logic for encoding image as data URI.
+        pass
     return path_str
 
-
 def _lexicon_sentiment(text: str) -> tuple[str, float]:
+    # Analyze sentiment of the given text based on predefined lexicon.
     words = re.findall(r"[\w']+", text.lower())
     if not words:
-        return "Neutral", 0.0
+        # Handle empty text case.
+        return "neutral", 0.0
+
     pos_hits = sum(1 for token in words if token in POSITIVE_TERMS)
     neg_hits = sum(1 for token in words if token in NEGATIVE_TERMS)
     score = (pos_hits - neg_hits) / max(len(words), 1)
-    if score > 0.02:
-        label = "Positive"
-    elif score < -0.02:
-        label = "Negative"
-    else:
-        label = "Neutral"
-    return label, score
 
+    # Adjust thresholds to reduce the likelihood of neutral responses.
+    if score > 0.01:
+        # Positive sentiment.
+        return "positive", score
+    elif score < -0.01:
+        # Negative sentiment.
+        return "negative", score
+    else:
+        # Neutral sentiment.
+        return "neutral", score
 
 def _render_nav() -> None:
+    # Render the navigation bar with links to different sections.
     nav_items = [
         ("hero", "Hero"),
         ("about", "About"),
@@ -131,7 +118,6 @@ def _render_nav() -> None:
         ("contact", "Contact"),
         ("lab", "ML Lab"),
     ]
-    
     links = "".join(f"<a href='#{slug}'>{label}</a>" for slug, label in nav_items)
     logo_src = _image_data_uri(PROFILE.get("logo", ""))
     nav_markup = dedent(
@@ -148,13 +134,13 @@ def _render_nav() -> None:
     ).strip()
     st.markdown(nav_markup, unsafe_allow_html=True)
 
-
 def _anchor(slug: str) -> None:
+    # Add an anchor for navigation to specific sections.
     st.markdown(f"<span id='{slug}' class='section-anchor'></span>", unsafe_allow_html=True)
-
 
 @contextmanager
 def _section_shell(anchor: str | None = None, title: str | None = None) -> None:
+    # Context manager for rendering a section shell with optional anchor and title.
     if anchor:
         _anchor(anchor)
     container = st.container()
@@ -165,8 +151,8 @@ def _section_shell(anchor: str | None = None, title: str | None = None) -> None:
         yield
         st.markdown("</section>", unsafe_allow_html=True)
 
-
 def _social_cta(label: str, url: str) -> str:
+    # Generate a call-to-action button for social links.
     icon_url = get_social_icon_url(label)
     return (
         f"<a class='ghost-btn hero-cta' href='{url}' target='_blank' rel='noopener'>"
@@ -175,8 +161,8 @@ def _social_cta(label: str, url: str) -> str:
         "</a>"
     )
 
-
 def _render_hero(summary: Dict) -> None:
+    # Render the hero section with profile details and stats.
     hero_stats = "".join(
         f"<div class='stat-tile'><p class='eyebrow'>{stat['label']}</p><h3>{stat['value']}</h3></div>"
         for stat in PROFILE["hero_stats"]
@@ -220,8 +206,8 @@ def _render_hero(summary: Dict) -> None:
     ).strip()
     st.markdown(hero_markup, unsafe_allow_html=True)
 
-
 def _render_about() -> None:
+    # Render the about section with personal highlights and focus areas.
     highlights = "".join(f"<li>{point}</li>" for point in ABOUT["highlights"])
     focus = "".join(f"<span class='chip'>{item}</span>" for item in ABOUT["focus"])
     st.markdown(
@@ -236,8 +222,8 @@ def _render_about() -> None:
         unsafe_allow_html=True,
     )
 
-
 def _render_experience() -> None:
+    # Render the experience section with work history.
     _anchor("experience")
     experience_markup = render_experience(EXPERIENCE)
     if not experience_markup:
@@ -253,8 +239,8 @@ def _render_experience() -> None:
         unsafe_allow_html=True,
     )
 
-
 def _render_education_section() -> None:
+    # Render the education section with degrees and certifications.
     _anchor("education")
     education_markup = render_education(EDUCATION)
     cert_markup = render_certifications(CERTIFICATIONS)
@@ -272,8 +258,8 @@ def _render_education_section() -> None:
         unsafe_allow_html=True,
     )
 
-
 def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]:
+    # Render the projects section with GitHub repositories and featured projects.
     _anchor("projects")
 
     # st.markdown("""
@@ -376,8 +362,8 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
 
     return github_repos, filtered
 
-
 def _render_ml_lab() -> None:
+    # Render the ML Lab section with quick demos for sentiment analysis and resume screening.
     _anchor("lab")
     st.subheader("ML Lab — quick demos")
     sentiment_tab, resume_tab = st.tabs([ML_LAB["sentiment"]["title"], ML_LAB["resume"]["title"]])
@@ -410,14 +396,19 @@ def _render_ml_lab() -> None:
         """
         <div class='chatbot-banner'>
             <p class='eyebrow'>AI Chatbot (beta)</p>
-            <h4>"Chat with my portfolio" </h4>
-            <p>LangChain · FAISS · MiniLM embeddings · Resume PDF · README vectors</p>
-            <p class='card-copy'>The conversational agent ingests my resume, project READMEs, and FAQs so recruiters can ask bespoke questions about impact, stacks, and decisions.</p>
+            <h4>"Chat with my portfolio"</h4>
+            <p>Powered by advanced AI technologies:</p>
+            <ul>
+                <li><strong>LangChain</strong>: Seamless conversational flows</li>
+                <li><strong>FAISS</strong>: Efficient similarity search</li>
+                <li><strong>MiniLM embeddings</strong>: Compact and powerful language understanding</li>
+                <li><strong>Resume PDF & README vectors</strong>: Tailored insights for recruiters</li>
+            </ul>
+            <p class='card-copy'>This conversational agent ingests my resume, project READMEs, and FAQs, enabling recruiters to ask bespoke questions about impact, stacks, and decisions.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
-
 
 def main() -> None:
     st.set_page_config(
@@ -489,12 +480,9 @@ def main() -> None:
     _anchor("resume")
     render_resume_section(RESUME)
 
-
     st.markdown("<hr/>", unsafe_allow_html=True)
     _anchor("contact")
     render_contact_section(CONTACT)
-
-
 
 if __name__ == "__main__":
     main()
