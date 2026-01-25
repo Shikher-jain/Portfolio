@@ -190,7 +190,7 @@ def _render_hero(summary: Dict) -> None:
         f"<div><p class='eyebrow'>{label}</p><h4>{value}</h4></div>"
         for label, value in [
             ("Location", PROFILE.get("location", "")),
-            ("Experience", PROFILE.get("experience", "")),
+            ("Education", PROFILE.get("experience", "")),
             ("Email", PROFILE.get("email", "")),
         ]
         if value
@@ -202,13 +202,12 @@ def _render_hero(summary: Dict) -> None:
             <div class='hero-card hero-card--expanded'>
                 <div class='hero-top'>
                     <div class='hero-avatar-card'>
-                        <img src='{avatar_src}' alt='Profile portrait' />
-                        <p class='avatar-caption'>{PROFILE['location']}</p>
+                        <img src='{avatar_src}' alt='Profile portrait'/>
+                        <p class='hero-bio' style="padding:12px 2px 2px 1px;">{PROFILE['role']}</p>
                     </div>
                     <div class='hero-copy'>
                         <p class='eyebrow'>{PROFILE['availability']}</p>
                         <h1>{PROFILE['name']}</h1>
-                        <h3>{PROFILE['role']}</h3>
                         <p class='hero-bio'>{PROFILE['tagline']}</p>
                         <div class='hero-actions'>{resume_btn}{ctas}</div>
                     </div>
