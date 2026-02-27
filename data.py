@@ -3,13 +3,14 @@ from datetime import date
 PROFILE = {
     "name": "Shikher Jain",
     "role": "Data Scientist & AI/ML Engineer",
-    "tagline": "Entry-level ML engineer crafting RAG, vision, and NLP systems end to end.",
+    "tagline": "AI/ML & Data Science Engineer specializing in backend systems and building scalable, production-ready intelligent solutions from data to deployment.",
     "location": "Agra, Uttar Pradesh, India",
     "experience": "B.Tech CSE | 2026",
     "email": "shikherjain786@gmail.com",
-    "availability": "Open to data science internships, AI/ML fellowships, and freelance builds",
+    # "availability": "Open to data science internships, AI/ML fellowships, and freelance builds",
     "avatar": "assets/profile.png",
-    "logo": "assets/logo.png",
+    # "logo": "assets/logo.png",
+    "logo": "assets/logo-SJ.png",
     "hero_stats": [
         {"label": "Projects Shipped", "value": "10+"},
         {"label": "Models Deployed", "value": "12"},
@@ -36,14 +37,18 @@ PROFILE = {
 
 ABOUT = {
     "headline": (
-        "Entry-level Data Scientist and AI/ML Engineer with hands-on experience in developing and deploying ML and DL "
-        "solutions. Skilled in data preprocessing, EDA, feature engineering, NLP, and computer vision with Python, PyTorch, "
-        "and scikit-learn across RESTful and cloud-integrated systems."
+        "AI/ML Engineer and Data Scientist with hands-on experience in Python and PyTorch, building end-to-end ML "
+        "pipelines spanning data preprocessing, feature engineering, model training, evaluation, and FastAPI-based API "
+        "deployment. Skilled in NLP, computer vision, RAG-based semantic search, and interactive dashboards. Experienced "
+        "in SQL-driven data analysis, backend system development, workflow automation, and scalable containerized "
+        "deployment using Docker. Passionate about data-driven problem solving at scale."
     ),
     "highlights": [
         "Build end-to-end AI workflows that move from exploratory notebooks into production-ready APIs and dashboards.",
         "Comfortable with transformer-based NLP, embeddings, and MediaPipe/OpenCV pipelines for real-time insights.",
-        "Experienced with data preprocessing, EDA, and feature engineering that keep downstream models stable and accurate."
+        "Experienced with data preprocessing, EDA, and feature engineering that keep downstream models stable and accurate.",
+        "Skilled in debugging data pipelines, implementing structured validation, and resolving inconsistencies across large datasets.",
+        "Experienced in building REST-based systems and improving operational reliability through systematic troubleshooting."
     ],
     "focus": [
         "Data Preprocessing & Feature Engineering",
@@ -55,18 +60,18 @@ ABOUT = {
 
 EXPERIENCE = [
     {
-        "role": "Data Science Intern",
+        "role": "Jr. Software Engineer Intern",
         "company": "Novas Arc Consulting Pvt. Ltd.",
         "location": "Remote",
         "date": "Aug 2025 – Nov 2025",
         "highlights": [
-            "Systematized an FAQ extraction pipeline for 100+ web pages, reducing manual effort by 60%.",
-            "Built an NLP-based context analyzer to classify intent, tone, persona, domain, and age group, boosting prompt relevance.",
-            "Fine-tuned OpenAI GPT-3.5 Turbo on custom datasets, improving response relevance by up to 30% in review cycles.",
-            "Deployed a training-data–driven AI chatbot with iterative testing and logic refinement to cut inconsistent replies.",
-            "Processed 10k+ text records for training and evaluation pipelines to maintain high-quality model inputs."
+            "Designed and maintained a modular Python backend service processing 10k+ structured records with input validation, structured logging, centralized exception handling, and exponential backoff retry logic for fault-tolerant execution.",
+            "Engineered automated data ingestion pipelines extracting FAQs from 100+ dynamic web pages using Selenium and REST API integration, reducing manual effort by 50–60% and improving data consistency.",
+            "Built NLP-based preprocessing and feature engineering pipelines for 10,000+ text records, integrating LLM APIs to structure unstructured web data for model-ready datasets.",
+            "Developed text classification and context analysis models for intent, persona, tone, domain, and age group, enhancing response relevance by 20–30%; fine-tuned GPT-3.5 Turbo and deployed a training-data–driven AI chatbot with iterative testing.",
+            "Collaborated in Agile sprints using Git and AWS CodeCommit, diagnosing pipeline issues and streamlining feature deployment cycles."
         ],
-        "stack": ["NLP", "GPT-3.5 Turbo", "FastAPI", "LangChain", "Prompt Engineering"]
+        "stack": ["Python", "Selenium", "NLP", "GPT-3.5 Turbo", "REST APIs", "LangChain", "Git", "AWS CodeCommit"]
     }
 ]
 
@@ -79,7 +84,8 @@ SKILL_GROUPS = [
         "category": "Programming Languages",
         "skills": [
             {"name": "Python", "badges": ["OOP", "Data Structures", "Automation", "Async"]},
-            {"name": "Java", "badges": ["OOP", "Collections", "JVM Basics"]},
+            {"name": "SQL", "badges": ["Querying", "Joins", "Aggregation","Window Functions"]},
+            {"name": "Java", "badges": ["OOP", "Collections"]},
             {"name": "C", "badges": ["Pointers", "Memory Management"]}
         ]
     },
@@ -93,6 +99,8 @@ SKILL_GROUPS = [
             {"name": "NumPy", "badges": ["Arrays", "Vectorization"]},
             {"name": "Pandas", "badges": ["DataFrames", "Feature Pipelines"]},
             {"name": "Scikit-learn", "badges": ["Regression", "Classification", "Pipelines"]},
+            {"name": "Model Training", "badges": ["Cross Validation", "Hyperparameter Tuning"]},
+            {"name": "Data Wrangling", "badges": ["Cleaning", "Transformation"]},
             {"name": "EDA", "badges": ["Insights", "Outlier Detection"]},
             {"name": "Feature Engineering", "badges": ["Scaling", "Encoding", "Selection"]},
             {"name": "Model Evaluation", "badges": ["Accuracy", "F1", "ROC-AUC"]}
@@ -106,6 +114,7 @@ SKILL_GROUPS = [
         "category": "Deep Learning & Artificial Intelligence",
         "skills": [
             {"name": "PyTorch", "badges": ["Autograd", "Custom Datasets", "Training Loops"]},
+            {"name": "Transformer Models", "badges": ["Attention", "Fine-tuning"]},
             {"name": "Neural Networks", "badges": ["MLP", "CNN", "RNN", "LSTM"]},
             {"name": "Model Optimization", "badges": ["Schedulers", "Dropout", "Weight Decay"]},
             {"name": "Transfer Learning", "badges": ["Pretrained Models", "Fine-tuning"]},
@@ -121,7 +130,11 @@ SKILL_GROUPS = [
         "skills": [
             {"name": "Text Preprocessing", "badges": ["Cleaning", "Normalization"]},
             {"name": "Tokenization", "badges": ["BPE", "WordPiece"]},
+            {"name": "Hugging Face", "badges": ["Transformers", "Pipelines"]},
             {"name": "Embeddings", "badges": ["Word2Vec", "GloVe", "Sentence-BERT"]},
+            {"name": "Semantic Search", "badges": ["Vector Similarity", "Retrieval"]},
+            {"name": "FAISS", "badges": ["Vector Indexing", "Nearest Neighbor Search"]},
+            {"name": "Qdrant", "badges": ["Vector Database", "Payload Filtering"]},
             {"name": "Transformers", "badges": ["BERT", "GPT", "Fine-tuning"]},
             {"name": "LLM Techniques", "badges": ["Prompt Engineering", "LoRA", "RAG"]}
         ]
@@ -135,6 +148,7 @@ SKILL_GROUPS = [
         "skills": [
             {"name": "OpenCV", "badges": ["Image Processing", "Video Streams"]},
             {"name": "MediaPipe", "badges": ["Hands", "Pose", "Face Mesh"]},
+            {"name": "Selenium", "badges": ["Web Automation", "Data Collection"]},
             {"name": "Face Recognition", "badges": ["Embeddings", "Similarity Search"]},
             {"name": "Pose Estimation", "badges": ["Keypoints", "Tracking"]},
             {"name": "Real-Time Vision Systems", "badges": ["FPS Optimization", "Threading"]}
@@ -161,8 +175,9 @@ SKILL_GROUPS = [
     {
         "category": "Web, APIs & Deployment",
         "skills": [
-            {"name": "FastAPI", "badges": ["Async", "REST APIs"]},
-            {"name": "Flask", "badges": ["Inference APIs"]},
+            {"name": "FastAPI", "badges": ["Async", "REST APIs", "Async Processing"]},
+            {"name": "Flask", "badges": ["Inference APIs", "REST APIs"]},
+            {"name": "REST API Design", "badges": ["CRUD", "Versioning"]},
             {"name": "Django", "badges": ["Auth", "MVC"]},
             {"name": "Streamlit", "badges": ["ML Dashboards", "Deployment"]},
             {"name": "API Security", "badges": ["JWT", "Rate Limiting"]}
@@ -176,12 +191,28 @@ SKILL_GROUPS = [
         "category": "Databases & Developer Tools",
         "skills": [
             {"name": "MySQL", "badges": ["Indexes", "Joins"]},
+            {"name": "PostgreSQL", "badges": ["Schema Design", "Query Optimization"]},
             {"name": "SQLite", "badges": ["Embedded Databases"]},
             {"name": "Git & GitHub", "badges": ["Version Control", "CI/CD"]},
+            {"name": "Linux", "badges": ["CLI", "Process Management"]},
             {"name": "Docker", "badges": ["Containers", "Image Optimization"]},
             {"name": "Postman", "badges": ["API Testing"]},
+            {"name": "Structured Logging", "badges": ["Observability", "Debugging"]},
             {"name": "Kaggle", "badges": ["Competitions", "Notebooks"]},
             {"name": "Google Colab", "badges": ["GPU Training"]}
+        ]
+    },
+
+    # ===============================
+    # Core Computer Science
+    # ===============================
+    {
+        "category": "Core Computer Science",
+        "skills": [
+            {"name": "Data Structures & Algorithms", "badges": ["Complexity Analysis", "Problem Solving"]},
+            {"name": "Operating Systems", "badges": ["Processes", "Memory Management"]},
+            {"name": "Object-Oriented Programming", "badges": ["Abstraction", "Inheritance", "Polymorphism"]},
+            {"name": "DBMS", "badges": ["Normalization", "Transactions"]}
         ]
     },
 
@@ -193,7 +224,7 @@ SKILL_GROUPS = [
         "skills": [
             {"name": "Linear Algebra", "badges": ["Vectors", "Matrices", "Eigenvalues"]},
             {"name": "Probability", "badges": ["Bayesian Thinking", "Distributions"]},
-            {"name": "Statistics", "badges": ["Hypothesis Testing", "Confidence Intervals"]},
+            {"name": "Statistics", "badges": ["Hypothesis Testing", "Confidence Intervals", "Statistical Inference"]},
             {"name": "Optimization", "badges": ["Gradient Descent", "Loss Functions"]}
         ]
     }
@@ -204,7 +235,7 @@ EDUCATION = [
         "institution": "Faculty of Engineering and Technology, Agra College (AKTU)",
         "degree": "B.Tech in Computer Science and Engineering",
         "period": "2022–2026",
-        "details": "CGPA: 7.78 / 10"
+        "details": "CGPA: 7.82 / 10"
     }
 ]
 
@@ -222,7 +253,7 @@ CONTACT = {
     "email": PROFILE["email"],
     "location": PROFILE["location"],
     "phone": "+91 74520 17544",
-    "availability": PROFILE["availability"],
+    # "availability": PROFILE["availability"],
     "socials": PROFILE["socials"],
     "calendly": "https://calendly.com/shikher-ai/30min"
 }
@@ -233,6 +264,33 @@ RESUME = {
     "tagline": "Full CV with professional summary, Novas Arc internship, projects, and certifications.",
     "last_updated": date.today().strftime("%b %Y")
 }
+
+RESUMES = [
+    {
+        "path": "assets/Shikher_Jain_Resume_AI_ML.pdf",
+        "file_name": "Shikher_Jain_Resume_AI_ML.pdf",
+        "tagline": "AI/ML focused profile for machine learning and applied AI roles.",
+        "last_updated": date.today().strftime("%b %Y"),
+    },
+    {
+        "path": "assets/Shikher_Jain_Resume_DataScience.pdf",
+        "file_name": "Shikher_Jain_Resume_DataScience.pdf",
+        "tagline": "Data Science focused version highlighting EDA, modeling, and analytics projects.",
+        "last_updated": date.today().strftime("%b %Y"),
+    },
+    {
+        "path": "assets/Shikher_Jain_Resume_Product_Support_Engineer.pdf",
+        "file_name": "Shikher_Jain_Resume_Product_Support_Engineer.pdf",
+        "tagline": "Product Support Engineer profile emphasizing troubleshooting, systems, and customer impact.",
+        "last_updated": date.today().strftime("%b %Y"),
+    },
+    {
+        "path": "assets/Shikher_Jain_Resume_SWE.pdf",
+        "file_name": "Shikher_Jain_Resume_SWE.pdf",
+        "tagline": "Software Engineering profile focused on backend, APIs, and production-ready development.",
+        "last_updated": date.today().strftime("%b %Y"),
+    },
+]
 
 GITHUB_CONFIG = {
     "username": "Shikher-jain",
@@ -453,25 +511,101 @@ SHORTLIST_FALLBACKS = {
 }
 
 ML_LAB = {
-    "sentiment": {
-        "title": "Sentiment Pulse",
-        "description": "Rapid sentiment pulse powered by curated lexicons for qualitative scans.",
-        "placeholder": "Paste any product feedback, standup summary, or customer snippet..."
-    },
     "resume": {
         "title": "Resume Skill Mapper",
-        "description": "Keyword-driven scoring that highlights ML, NLP, and MLOps coverage instantly.",
-        "placeholder": "Drop a short resume paragraph to score coverage of ML stacks...",
-        "keywords": [
-            "pytorch",
-            "transformer",
-            "mlops",
-            "langchain",
-            "huggingface",
-            "fastapi",
-            "vector",
-            "streamlit",
-            "monitoring"
-        ]
+        "description": "Role-based weighted scoring with skill-gap detection and optional JD similarity.",
+        "placeholder": "Paste resume summary/experience/skills here...",
+        "jd_placeholder": "Paste target job description (optional) to compute alignment...",
+        "roles": {
+            "AI/ML Engineer": {
+                "weights": {
+                    "python": 10,
+                    "pytorch": 10,
+                    "rag": 10,
+                    "transformers": 9,
+                    "nlp": 9,
+                    "fastapi": 8,
+                    "docker": 8,
+                    "langchain": 8,
+                    "faiss": 7,
+                    "mlops": 8,
+                    "monitoring": 6,
+                    "sql": 6,
+                },
+                "aliases": {
+                    "transformers": ["transformer", "huggingface", "bert"],
+                    "rag": ["retrieval augmented generation", "retrieval-augmented generation"],
+                    "monitoring": ["observability", "model monitoring"],
+                },
+                "must_have": ["python", "pytorch", "rag", "fastapi"],
+            },
+            "Data Scientist": {
+                "weights": {
+                    "python": 10,
+                    "sql": 10,
+                    "pandas": 8,
+                    "numpy": 8,
+                    "scikit-learn": 9,
+                    "feature engineering": 8,
+                    "statistics": 8,
+                    "eda": 7,
+                    "visualization": 7,
+                    "machine learning": 9,
+                    "streamlit": 5,
+                },
+                "aliases": {
+                    "scikit-learn": ["sklearn"],
+                    "visualization": ["plotly", "matplotlib", "seaborn", "dashboard"],
+                    "machine learning": ["ml", "predictive modeling"],
+                },
+                "must_have": ["python", "sql", "scikit-learn"],
+            },
+            "SWE": {
+                "weights": {
+                    "python": 9,
+                    "java": 9,
+                    "sql": 8,
+                    "data structures": 10,
+                    "algorithms": 10,
+                    "oop": 8,
+                    "fastapi": 7,
+                    "rest api": 8,
+                    "git": 7,
+                    "docker": 7,
+                    "debugging": 8,
+                    "testing": 8,
+                },
+                "aliases": {
+                    "rest api": ["rest", "api development", "api design"],
+                    "data structures": ["dsa", "data structure"],
+                    "algorithms": ["algorithm"],
+                    "testing": ["unit test", "pytest", "unittest"],
+                },
+                "must_have": ["data structures", "algorithms", "oop", "git"],
+            },
+            "SQL Developer": {
+                "weights": {
+                    "sql": 10,
+                    "joins": 9,
+                    "window functions": 9,
+                    "stored procedures": 9,
+                    "query optimization": 9,
+                    "indexing": 8,
+                    "normalization": 8,
+                    "etl": 8,
+                    "data modeling": 8,
+                    "postgresql": 7,
+                    "mysql": 7,
+                    "debugging": 6,
+                },
+                "aliases": {
+                    "stored procedures": ["stored procedure", "procedure"],
+                    "query optimization": ["performance tuning", "query tuning"],
+                    "indexing": ["indexes", "index"],
+                    "etl": ["data pipeline", "data ingestion"],
+                },
+                "must_have": ["sql", "joins", "window functions", "query optimization"],
+            },
+        },
     }
 }

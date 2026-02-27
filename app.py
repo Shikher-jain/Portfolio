@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import base64
 import re
-from contextlib import contextmanager
 from pathlib import Path
 from textwrap import dedent
 from typing import Dict, List
@@ -14,9 +13,9 @@ from components.education import render_certifications, render_education
 from components.experience import render_experience
 from components.flip_card import render_project_cards
 from components.github_stats import render_github_stats
-from components.resume import load_resume_base64, render_resume_section
+from components.resume import render_resume_section
 from components.skills import render_skills
-from components.social_icons import get_social_icon_url
+from components.social_icons import get_social_icon_img_tag
 from data import (
     ABOUT,
     CERTIFICATIONS,
@@ -30,28 +29,26 @@ from data import (
     GITHUB_CONFIG,
     ML_LAB,
     PROFILE,
-    RESUME,
+    RESUMES,
     SKILL_GROUPS,
 )
 
 from github_api import fetch_github_summary, fetch_portfolio_repositories, fetch_repository
 from live_demos import apply_live_demo_links
 
-def _load_sentiment_words() -> tuple[set[str], set[str]]:
-    # Load positive and negative words from external files.
-    positive_words_path = Path(__file__).parent / "positive_words.txt"
-    negative_words_path = Path(__file__).parent / "negative_words.txt"
-
-    with positive_words_path.open("r", encoding="utf-8") as pos_file:
-        positive_words = {line.strip() for line in pos_file if line.strip() and not line.startswith("#")}
-
-    with negative_words_path.open("r", encoding="utf-8") as neg_file:
-        negative_words = {line.strip() for line in neg_file if line.strip() and not line.startswith("#")}
-
-    return positive_words, negative_words
-
-# Load the sentiment words at runtime.
-POSITIVE_TERMS, NEGATIVE_TERMS = _load_sentiment_words()
+NAV_ITEMS = [
+    ("hero", "Hero"),
+    ("about", "About"),
+    ("experience", "Experience"),
+    ("education", "Education"),
+    ("skills", "Skills"),
+    ("projects", "Projects"),
+    ("github", "GitHub"),
+    ("social_Links", "Social Links"),
+    ("lab", "ML Lab"),
+    ("resume", "Resume"),
+    ("contact", "Contact"),
+]
 
 def _load_css() -> None:
     # Load and apply custom CSS styles for the app.
@@ -96,43 +93,9 @@ def _image_data_uri(path_str: str) -> str:
         return f"data:{mime_type};base64,{base64_data}"
     return path_str
 
-def _lexicon_sentiment(text: str) -> tuple[str, float]:
-    # Analyze sentiment of the given text based on predefined lexicon.
-    words = re.findall(r"[\w']+", text.lower())
-    if not words:
-        # Handle empty text case.
-        return "neutral", 0.0
-
-    pos_hits = sum(1 for token in words if token in POSITIVE_TERMS)
-    neg_hits = sum(1 for token in words if token in NEGATIVE_TERMS)
-    score = (pos_hits - neg_hits) / max(len(words), 1)
-
-    # Adjust thresholds to reduce the likelihood of neutral responses.
-    if score > 0.01:
-        # Positive sentiment.
-        return "positive", score
-    elif score < -0.01:
-        # Negative sentiment.
-        return "negative", score
-    else:
-        # Neutral sentiment.
-        return "neutral", score
-
 def _render_nav() -> None:
     # Render the navigation bar with links to different sections.
-    nav_items = [
-        ("hero", "Hero"),
-        ("about", "About"),
-        ("experience", "Experience"),
-        ("education", "Education"),
-        ("skills", "Skills"),
-        ("projects", "Projects"),
-        ("github", "GitHub"),
-        ("resume", "Resume"),
-        ("contact", "Contact"),
-        ("lab", "ML Lab"),
-    ]
-    links = "".join(f"<a href='#{slug}'>{label}</a>" for slug, label in nav_items)
+    links = "".join(f"<a href='#{slug}'>{label}</a>" for slug, label in NAV_ITEMS)
     logo_src = _image_data_uri(PROFILE.get("logo", ""))
     nav_markup = dedent(
         f"""
@@ -152,28 +115,9 @@ def _anchor(slug: str) -> None:
     # Add an anchor for navigation to specific sections.
     st.markdown(f"<span id='{slug}' class='section-anchor'></span>", unsafe_allow_html=True)
 
-@contextmanager
-def _section_shell(anchor: str | None = None, title: str | None = None) -> None:
-    # Context manager for rendering a section shell with optional anchor and title.
-    if anchor:
-        _anchor(anchor)
-    container = st.container()
-    with container:
-        st.markdown("<section class='section-shell'>", unsafe_allow_html=True)
-        if title:
-            st.markdown(f"<h2>{title}</h2>", unsafe_allow_html=True)
-        yield
-        st.markdown("</section>", unsafe_allow_html=True)
 
-def _social_cta(label: str, url: str) -> str:
-    # Generate a call-to-action button for social links.
-    icon_url = get_social_icon_url(label)
-    return (
-        f"<a class='ghost-btn hero-cta' href='{url}' target='_blank' rel='noopener'>"
-        f"<span class='social-icon'><img src='{icon_url}' alt='{label} icon' loading='lazy' /></span>"
-        f"<span>{label}</span>"
-        "</a>"
-    )
+def _divider() -> None:
+    st.markdown("<hr/>", unsafe_allow_html=True)
 
 def _render_hero(summary: Dict) -> None:
     # Render the hero section with profile details and stats.
@@ -181,10 +125,26 @@ def _render_hero(summary: Dict) -> None:
         f"<div class='stat-tile'><p class='eyebrow'>{stat['label']}</p><h3>{stat['value']}</h3></div>"
         for stat in PROFILE["hero_stats"]
     )
-    ctas = "".join(_social_cta(label, url) for label, url in PROFILE["socials"].items() if label != "Resume")
-    resume_b64 = load_resume_base64(RESUME.get("path", ""))
-    resume_href = f"data:application/pdf;base64,{resume_b64}" if resume_b64 else "#resume"
-    resume_btn = f"<a class='solid-btn' href='{resume_href}' download>Download Resume</a>"
+    resume_btn = "<a class='solid-btn' href='#resume'>Download Resume</a>"
+    email = PROFILE.get("email", "")
+    calendly = CONTACT.get("calendly", "#")
+    linkedin_url = PROFILE.get("socials", {}).get("LinkedIn", "#")
+    github_url = PROFILE.get("socials", {}).get("GitHub", "#")
+    linkedin_icon = get_social_icon_img_tag("LinkedIn", "LinkedIn icon")
+    github_icon = get_social_icon_img_tag("GitHub", "GitHub icon")
+    hero_contact_ctas = (
+        f"<a class='ghost-btn' href='mailto:{email}?subject=Hello%20Shikher' target='_blank' rel='noopener noreferrer'>Send Email</a>"
+        "<a class='ghost-btn' href='#contact'>Contact Me</a>"
+        f"<a class='ghost-btn' href='{calendly}' target='_blank' rel='noopener'>Schedule a call</a>"
+        f"<a class='ghost-btn hero-cta' href='{linkedin_url}' target='_blank' rel='noopener'>"
+        f"<span class='social-icon'>{linkedin_icon}</span>"
+        "<span>LinkedIn</span>"
+        "</a>"
+        f"<a class='ghost-btn hero-cta' href='{github_url}' target='_blank' rel='noopener'>"
+        f"<span class='social-icon'>{github_icon}</span>"
+        "<span>GitHub</span>"
+        "</a>"
+    )
     avatar_src = _image_data_uri(PROFILE["avatar"])
     hero_meta = "".join(
         f"<div><p class='eyebrow'>{label}</p><h4>{value}</h4></div>"
@@ -206,13 +166,12 @@ def _render_hero(summary: Dict) -> None:
                         <p class='hero-bio' style="padding:12px 2px 2px 1px;">{PROFILE['role']}</p>
                     </div>
                     <div class='hero-copy'>
-                        <p class='eyebrow'>{PROFILE['availability']}</p>
                         <h1>{PROFILE['name']}</h1>
                         <p class='hero-bio'>{PROFILE['tagline']}</p>
-                        <div class='hero-actions'>{resume_btn}{ctas}</div>
+                        <div class='hero-actions'>{resume_btn}{hero_contact_ctas}</div>
                     </div>
                 </div>
-                <div class='hero-stats'>{hero_stats}</div>
+            <!--    <div class='hero-stats'>{hero_stats}</div>  -->
             </div>
             <div class='hero-meta-panel'>{hero_meta}</div>
         </section>
@@ -238,7 +197,6 @@ def _render_about() -> None:
 
 def _render_experience() -> None:
     # Render the experience section with work history.
-    _anchor("experience")
     experience_markup = render_experience(EXPERIENCE)
     if not experience_markup:
         st.info("Work experience will appear here once it's added.")
@@ -255,7 +213,6 @@ def _render_experience() -> None:
 
 def _render_education_section() -> None:
     # Render the education section with degrees and certifications.
-    _anchor("education")
     education_markup = render_education(EDUCATION)
     cert_markup = render_certifications(CERTIFICATIONS)
     if not education_markup and not cert_markup:
@@ -272,13 +229,22 @@ def _render_education_section() -> None:
         unsafe_allow_html=True,
     )
 
+
+def _render_skills_section() -> None:
+    """Render the skills section shell and skill cards."""
+    skills_markup = render_skills(SKILL_GROUPS)
+    st.markdown(
+        f"""
+        <section class='section-shell'>
+            <h2>Skills</h2>
+            {skills_markup}
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
 def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]:
     # Render the projects section with GitHub repositories and featured projects.
-    _anchor("projects")
-
-    # st.markdown("""
-    #     <div class='card-container' style='background-color: #2c2c2c; padding: 20px; border-radius: 10px;'>
-    # """, unsafe_allow_html=True)
 
     st.subheader("Live Projects")
 
@@ -370,56 +336,145 @@ def _render_projects(username: str, topic: str) -> tuple[List[Dict], List[Dict]]
     render_project_cards(filtered)
     st.caption(f"{len(filtered)} projects - {source_choice}")
 
-    # st.markdown("""
-    #     </div>
-    # """, unsafe_allow_html=True)
-
     return github_repos, filtered
 
+
+def _normalize_text(text: str) -> str:
+    return " ".join((text or "").lower().split())
+
+
+def _contains_term(text: str, term: str, aliases: dict[str, list[str]]) -> bool:
+    candidates = [term] + aliases.get(term, [])
+    for candidate in candidates:
+        pattern = rf"\b{re.escape(candidate.lower())}\b"
+        if re.search(pattern, text):
+            return True
+    return False
+
+
+def _jaccard_similarity(left: str, right: str) -> float:
+    left_tokens = set(re.findall(r"[a-zA-Z0-9+\-#\.]+", left.lower()))
+    right_tokens = set(re.findall(r"[a-zA-Z0-9+\-#\.]+", right.lower()))
+    if not left_tokens or not right_tokens:
+        return 0.0
+    union = left_tokens | right_tokens
+    if not union:
+        return 0.0
+    return (len(left_tokens & right_tokens) / len(union)) * 100.0
+
 def _render_ml_lab() -> None:
-    # Render the ML Lab section with quick demos for sentiment analysis and resume screening.
-    _anchor("lab")
-    st.subheader("ML Lab — quick demos")
-    sentiment_tab, resume_tab = st.tabs([ML_LAB["sentiment"]["title"], ML_LAB["resume"]["title"]])
+    # Render the ML Lab section with advanced role-based resume matching.
+    st.subheader("ML Lab — Advanced Resume Matcher")
+    resume_cfg = ML_LAB["resume"]
+    st.caption(resume_cfg["description"])
 
-    with sentiment_tab:
-        st.caption(ML_LAB["sentiment"]["description"])
-        default_text = "The new multilingual assistant delightfully resolved onboarding issues in seconds."
-        text = st.text_area("Text input", value=default_text, placeholder=ML_LAB["sentiment"]["placeholder"], key="sentiment-input")
-        if st.button("Analyze sentiment", key="sentiment-btn"):
-            if not text.strip():
-                st.warning("Please provide some text.")
+    roles = resume_cfg.get("roles", {})
+    if not roles:
+        st.warning("No role profiles configured for ML Lab.")
+        return
+
+    role_name = st.selectbox("Target role", list(roles.keys()), key="resume-role")
+    role_profile = roles[role_name]
+    weights = role_profile.get("weights", {})
+    aliases = role_profile.get("aliases", {})
+    must_have = role_profile.get("must_have", [])
+
+    resume_text = st.text_area(
+        "Resume snippet",
+        value="Architected PyTorch transformers with Vertex pipelines.",
+        placeholder=resume_cfg["placeholder"],
+        key="resume-input",
+    )
+
+    jd_text = st.text_area(
+        "Job description (optional)",
+        value="",
+        placeholder=resume_cfg.get("jd_placeholder", "Paste JD to compare alignment..."),
+        key="jd-input",
+    )
+
+    if st.button("Analyze resume", key="resume-btn"):
+        normalized_resume = _normalize_text(resume_text)
+        if not normalized_resume:
+            st.warning("Please provide a resume snippet.")
+            return
+
+        matched_skills: list[str] = []
+        missing_skills: list[str] = []
+        matched_weight = 0
+        total_weight = sum(int(value) for value in weights.values()) or 1
+
+        for skill, weight in weights.items():
+            if _contains_term(normalized_resume, skill, aliases):
+                matched_skills.append(skill)
+                matched_weight += int(weight)
             else:
-                label, score = _lexicon_sentiment(text)
-                st.metric("Sentiment", label, f"score {score:+.2f}")
+                missing_skills.append(skill)
 
-    with resume_tab:
-        st.caption(ML_LAB["resume"]["description"])
-        resume_text = st.text_area("Resume snippet", value="Architected PyTorch transformers with Vertex pipelines.", placeholder=ML_LAB["resume"]["placeholder"], key="resume-input")
-        if st.button("Score resume", key="resume-btn"):
-            keywords = ML_LAB["resume"]["keywords"]
-            text_lower = resume_text.lower()
-            hits = [kw for kw in keywords if kw in text_lower]
-            coverage = int((len(hits) / len(keywords)) * 100)
-            st.progress(coverage)
-            st.write(f"Coverage: {coverage}% ({len(hits)} / {len(keywords)} critical keywords)")
-            if hits:
-                st.write("Detected keywords:", ", ".join(hits))
+        weighted_score = (matched_weight / total_weight) * 100
+        jd_score = _jaccard_similarity(normalized_resume, jd_text) if jd_text.strip() else 0.0
+        final_score = weighted_score if not jd_text.strip() else (0.75 * weighted_score + 0.25 * jd_score)
 
+        metrics_cols = st.columns(3)
+        with metrics_cols[0]:
+            st.metric("Weighted Skill Score", f"{weighted_score:.1f}%")
+        with metrics_cols[1]:
+            st.metric("JD Alignment", f"{jd_score:.1f}%")
+        with metrics_cols[2]:
+            st.metric("Final Match", f"{final_score:.1f}%")
+
+        st.progress(min(max(final_score / 100.0, 0.0), 1.0))
+
+        missing_must_have = [item for item in must_have if item in missing_skills]
+        top_strengths = sorted(matched_skills, key=lambda item: weights.get(item, 0), reverse=True)[:6]
+        top_gaps = sorted(missing_skills, key=lambda item: weights.get(item, 0), reverse=True)[:6]
+
+        st.write(f"Detected skills: {len(matched_skills)} / {len(weights)}")
+        if top_strengths:
+            st.success("Top strengths: " + ", ".join(top_strengths))
+        if missing_must_have:
+            st.error("Critical gaps: " + ", ".join(missing_must_have))
+        if top_gaps:
+            st.info("Recommended next skills: " + ", ".join(top_gaps))
+
+
+def _render_social_links_expander() -> None:
+    """Render all social links as a responsive visible section."""
+    social_dict = PROFILE.get("socials", {})
+    labels = list(social_dict.keys())
+    if not labels:
+        st.info("No social links available.")
+        return
+
+    cards_list: List[str] = []
+    for label in labels:
+        is_resume = "resume" in label.lower()
+        href = "#resume" if is_resume else social_dict[label]
+        rel_attr = "noopener" if not is_resume else ""
+        target_attr = "_blank" if not is_resume else "_self"
+        cta_text = "Choose Resume" if is_resume else f"Open {label}"
+
+        cards_list.append(
+            dedent(
+                f"""
+                <div class='social-card'>
+                    {get_social_icon_img_tag(label, f'{label} icon', "style='height:28px;width:28px;'")}
+                    <h4>{label}</h4>
+                    <div class='card-actions'>
+                        <a class='solid-btn' href='{href}' target='{target_attr}' rel='{rel_attr}'>{cta_text}</a>
+                    </div>
+                </div>
+                """
+            ).strip()
+        )
+
+    cards = "".join(cards_list)
     st.markdown(
-        """
-        <div class='chatbot-banner'>
-            <p class='eyebrow'>AI Chatbot (beta)</p>
-            <h4>"Chat with my portfolio"</h4>
-            <p>Powered by advanced AI technologies:</p>
-            <ul>
-                <li><strong>LangChain</strong>: Seamless conversational flows</li>
-                <li><strong>FAISS</strong>: Efficient similarity search</li>
-                <li><strong>MiniLM embeddings</strong>: Compact and powerful language understanding</li>
-                <li><strong>Resume PDF & README vectors</strong>: Tailored insights for recruiters</li>
-            </ul>
-            <p class='card-copy'>This conversational agent ingests my resume, project READMEs, and FAQs, enabling recruiters to ask bespoke questions about impact, stacks, and decisions.</p>
-        </div>
+        f"""
+        <section class='section-shell'>
+            <h2>Social Links</h2>
+            <div class='social-grid'>{cards}</div>
+        </section>
         """,
         unsafe_allow_html=True,
     )
@@ -442,32 +497,25 @@ def main() -> None:
     gh_summary = fetch_github_summary(GITHUB_CONFIG["username"])
     _render_hero(gh_summary)
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _divider()
     _anchor("about")
     _render_about()
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _divider()
     _anchor("experience")
     _render_experience()
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _divider()
+    _anchor("education")
     _render_education_section()
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _divider()
     _anchor("skills")
-    skills_markup = render_skills(SKILL_GROUPS)
-    st.markdown(
-        f"""
-        <section class='section-shell'>
-            <h2>Skills</h2>
-            {skills_markup}
-        </section>
-        """,
-        unsafe_allow_html=True,
-    )
+    _render_skills_section()
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _divider()
 
+    _anchor("projects")
     github_repos, showcased_projects = _render_projects(GITHUB_CONFIG["username"], GITHUB_CONFIG["topic"])
 
     summary_for_stats = dict(gh_summary)
@@ -478,7 +526,7 @@ def main() -> None:
         summary_for_stats.setdefault("total_stars", 0)
         summary_for_stats.setdefault("latest_repo", "")
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _divider()
     _anchor("github")
     st.subheader("GitHub Snapshot")
     st.markdown("<p class='subtle-subhead'>Contribution activity</p>", unsafe_allow_html=True)
@@ -486,14 +534,19 @@ def main() -> None:
     spotlight_pool = showcased_projects or github_repos
     render_github_stats(summary_for_stats, spotlight_pool)
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+
+    _divider()
+    _anchor("lab")
     _render_ml_lab()
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _divider()
     _anchor("resume")
-    render_resume_section(RESUME)
+    render_resume_section(RESUMES)
 
-    st.markdown("<hr/>", unsafe_allow_html=True)
+    _anchor("social_Links")
+    _render_social_links_expander()
+
+    _divider()
     _anchor("contact")
     render_contact_section(CONTACT)
 

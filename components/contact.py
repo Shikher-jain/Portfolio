@@ -4,7 +4,7 @@ from __future__ import annotations
 import html
 from typing import Dict
 import streamlit as st
-from .social_icons import get_social_icon_url
+from .social_icons import get_social_icon_img_tag
 import psycopg2
 from dotenv import load_dotenv
 import os
@@ -16,10 +16,9 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
 def _social_icon_html(label: str) -> str:
-    icon_url = get_social_icon_url(label)
-    return f"<span class='social-icon'><img src='{icon_url}' alt='{label} icon' loading='lazy' /></span>"
+    icon_img = get_social_icon_img_tag(label, f"{label} icon")
+    return f"<span class='social-icon'>{icon_img}</span>"
 
 
 def render_contact_section(contact: dict[str, str]) -> None:
@@ -36,41 +35,41 @@ def render_contact_section(contact: dict[str, str]) -> None:
     )
 
 
-    st.markdown(
-        f"""
-        <section class='section-shell'>
-        <div class='contact-card'>
-            <div>
-                <p class='eyebrow'>Based in</p>
-                <h3>{location}</h3>
-                <p>{availability}</p>
-                <div class='contact-chip-row'>
-                    <a class="ghost-btn"
-                       href="mailto:{email}?subject=Hello%20Shikher"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       aria-label="Send email">
-                       Send Email
-                    </a>
-                    <a class="ghost-btn"
-                    href="mailto:{email}?subject=Portfolio%20Inquiry&amp;body=Hi%20Shikher,%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20connect.%0A%0ARegards,"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                       Contact Me
-                    </>
-                    <a class='ghost-btn'
-                       href='{calendly}'
-                       target='_blank'
-                       rel='noopener'>
-                       Schedule a call
-                    </a>
-                </div>
-                <div class='social-list'>{socials_html}</div>
-            </div>
-        </div>
-        </section>
-        """, unsafe_allow_html=True
-    ) # Ensure raw HTML is rendered
+    # st.markdown(
+    #     f"""
+    #     <section class='section-shell'>
+    #     <div class='contact-card'>
+    #         <div>
+    #             <p class='eyebrow'>Based in</p>
+    #             <h3>{location}</h3>
+    #             <p>{availability}</p>
+    #             <div class='contact-chip-row'>
+    #                 <a class="ghost-btn"
+    #                    href="mailto:{email}?subject=Hello%20Shikher"
+    #                    target="_blank"
+    #                    rel="noopener noreferrer"
+    #                    aria-label="Send email">
+    #                    Send Email
+    #                 </a>
+    #                 <a class="ghost-btn"
+    #                 href="mailto:{email}?subject=Portfolio%20Inquiry&amp;body=Hi%20Shikher,%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20connect.%0A%0ARegards,"
+    #                    target="_blank"
+    #                    rel="noopener noreferrer">
+    #                    Contact Me
+    #                 </>
+    #                 <a class='ghost-btn'
+    #                    href='{calendly}'
+    #                    target='_blank'
+    #                    rel='noopener'>
+    #                    Schedule a call
+    #                 </a>
+    #             </div>
+    #             <div class='social-list'>{socials_html}</div>
+    #         </div>
+    #     </div>
+    #     </section>
+    #     """, unsafe_allow_html=True
+    # ) # Ensure raw HTML is rendered
 
 
     st.markdown("<hr/>", unsafe_allow_html=True)

@@ -70,7 +70,40 @@ def render_project_cards(projects: List[Dict]) -> None:
         st.info("Publish a repository with the 'portfolio' topic to see it reflected here automatically.")
         return
 
-    cards_html = "".join(_build_card(repo) for repo in projects)
+    cards_per_slide = 3
+    total_projects = len(projects)
+    total_slides = (total_projects + cards_per_slide - 1) // cards_per_slide
+
+    if total_slides > 1:
+        slide_key = "project_slide_index"
+        if slide_key not in st.session_state:
+            st.session_state[slide_key] = 0
+        st.session_state[slide_key] = st.session_state[slide_key] % total_slides
+
+        prev_col, status_col, next_col = st.columns([1, 2, 1])
+        with prev_col:
+            if st.button("◀ Previous", key="project-prev-btn"):
+                st.session_state[slide_key] = (st.session_state[slide_key] - 1 + total_slides) % total_slides
+        with status_col:
+            current_slide = st.session_state[slide_key] + 1
+            st.markdown(
+                f"<p style='text-align:center; margin-top:0.6rem;'><strong>Projects</strong>"
+                f" &nbsp;|&nbsp; Slide {current_slide} of {total_slides}</p>",
+                unsafe_allow_html=True,
+            )
+        with next_col:
+            if st.button("Next ▶", key="project-next-btn"):
+                st.session_state[slide_key] = (st.session_state[slide_key] + 1) % total_slides
+
+        start_index = st.session_state[slide_key] * cards_per_slide
+        visible_projects = projects[start_index : start_index + cards_per_slide]
+        st.caption(
+            f"Showing {start_index + 1}-{min(start_index + cards_per_slide, total_projects)} of {total_projects}"
+        )
+    else:
+        visible_projects = projects
+
+    cards_html = "".join(_build_card(repo) for repo in visible_projects)
     script = dedent(
         """
         <script>

@@ -1,144 +1,63 @@
-"""Skills grid rendering — now using flip-card layout for each skill."""
+"""Skills section renderer (normal simple format)."""
+
+from html import escape
 from textwrap import dedent
-from typing import Dict, List
+from typing import Any
+
 import streamlit as st
 
-# Define a mapping of skill names to their corresponding Simple Icons identifiers
-SKILL_ICON_MAP = {
-    "Python": "python",
-    "Java": "java",
-    "C": "c",
-    "NumPy": "numpy",
-    "Pandas": "pandas",
-    "Scikit-learn": "scikitlearn",
-    "PyTorch": "pytorch",
-    "TensorFlow": "tensorflow",
-    "OpenCV": "opencv",
-    "MediaPipe": "mediapipe",
-    "FastAPI": "fastapi",
-    "Flask": "flask",
-    "Django": "django",
-    "Streamlit": "streamlit",
-    "Docker": "docker",
-    "Git": "git",
-    "GitHub": "github",
-    "MySQL": "mysql",
-    "SQLite": "sqlite",
-    "Postman": "postman",
-    "Power BI": "powerbi",
-    "Tableau": "tableau",
-    "Plotly": "plotly",
-    "Matplotlib": "matplotlib",
-    "Seaborn": "seaborn",
-    "Kaggle": "kaggle",
-    "Jupyter Notebook": "jupyter",
-    "Google Colab": "googlecolab",
-    "Hugging Face": "huggingface",
-    "LangChain": "langchain",
-    "OpenAI": "openai",
-}
 
-DEFAULT_SKILL_ICON = "simpleicons"
+def _skill_line(skill: dict[str, Any]) -> str:
+    name = escape(str(skill.get("name", "Unnamed")))
+    badges = skill.get("badges", []) or []
+    if not badges:
+        return f"<li>{name}</li>"
+    badges_text = ", ".join(escape(str(item)) for item in badges)
+    return f"<li><strong>{name}</strong>: {badges_text}</li>"
 
 
-def render_skills(skill_groups: List[Dict]) -> str:
-    """Render skills grouped by category as flip-cards.
+def _group_block(group: dict[str, Any]) -> str:
+    category = escape(str(group.get("category", "Skills")))
+    skills = group.get("skills", []) or []
+    lines = "".join(_skill_line(skill) for skill in skills if isinstance(skill, dict))
+    return dedent(
+        f"""
+        <div class='skill-card'>
+            <h4>{category}</h4>
+            <ul>{lines}</ul>
+        </div>
+        """
+    ).strip()
 
-    Front: icon, name, meter. Back: badges/details.
-    """
-    categories = [group.get("category", "") for group in skill_groups]
-    filter_options = ["All"] + categories
 
-    choice = st.selectbox("Filter skill category", filter_options, key="skills-filter")
+def render_skills(skill_groups: list[dict[str, Any]]) -> str:
+    """Render skills as a carousel using Streamlit-native controls."""
+    groups = [group for group in skill_groups if isinstance(group, dict) and group.get("category")]
+    if not groups:
+        return "<div class='skill-grid'><div class='skill-card'><h4>Skills</h4><p>No skills added yet.</p></div></div>"
 
-    groups_to_render = (
-        skill_groups if choice == "All" else [group for group in skill_groups if group.get("category") == choice]
-    )
+    slide_key = "skills_slide_index"
+    if slide_key not in st.session_state:
+        st.session_state[slide_key] = 0
 
-    cards: List[str] = []
-    for group in groups_to_render:
-        flips: List[str] = []
-        for item in group.get("skills", []):
-            name = item.get("name", "Unnamed")
-            badges = item.get("badges", [])
-            desc = item.get("description", "")
+    total_slides = len(groups)
+    st.session_state[slide_key] = st.session_state[slide_key] % total_slides
 
-            icon_key = SKILL_ICON_MAP.get(name, DEFAULT_SKILL_ICON)
-            icon_url = f"https://cdn.simpleicons.org/{icon_key}"
-            icon_html = (
-                f"<img src=\"{icon_url}\" alt=\"{name}\" "
-                "class=\"skill-icon-img\" loading=\"lazy\" decoding=\"async\"/>"
-            )
-
-            back_badges = "".join(f"<span class='chip'>{b}</span>" for b in badges)
-
-            flips.append(
-                dedent(
-                    f"""
-                    <div class='flip-card'>
-                      <div class='flip-inner'>
-                        <div class='flip-front'>
-                          <div class='skill-row'>
-                            <div class='skill-icon'>{icon_html}</div>
-                            <div class='skill-meta'>
-                              <div class='skill-name'>{name}</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class='flip-back'>
-                          <div class='flip-back-inner'>
-                            <div class='skill-desc'>{desc}</div>
-                            <div class='tag-row'>{back_badges}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    """
-                ).strip()
-            )
-
-        cards.append(
-            dedent(
-                f"""
-                <div class='skill-card'>
-                  <h4>{group.get('category')}</h4>
-                  <div class='flip-grid'>
-                    {''.join(flips)}
-                  </div>
-                </div>
-                """
-            ).strip()
+    prev_col, status_col, next_col = st.columns([1, 2, 1])
+    with prev_col:
+        if st.button("◀ Previous", key="skills-prev-btn"):
+            st.session_state[slide_key] = (st.session_state[slide_key] - 1 + total_slides) % total_slides
+    with status_col:
+        current_index = st.session_state[slide_key]
+        current_category = escape(str(groups[current_index].get("category", "Skills")))
+        st.markdown(
+            f"<p style='text-align:center; margin-top:0.6rem;'><strong>{current_category}</strong>"
+            f" &nbsp;|&nbsp; Slide {current_index + 1} of {total_slides}</p>",
+            unsafe_allow_html=True,
         )
+    with next_col:
+        if st.button("Next ▶", key="skills-next-btn"):
+            st.session_state[slide_key] = (st.session_state[slide_key] + 1) % total_slides
 
-    return f"<div class='skill-grid'>{''.join(cards)}</div>"
-
-
-# Function to generate the HTML for skill icons
-def generate_skill_icon_html(skill_name):
-    """
-    Generates an HTML <img> tag for the given skill name using the priority system:
-    1. Devicon SVG fallback
-    2. SimpleIcons CDN
-    3. Generic tech icon fallback
-
-    Args:
-        skill_name (str): The name of the skill.
-
-    Returns:
-        str: HTML <img> tag as a string.
-    """
-    icon_name = SKILL_ICON_MAP.get(skill_name, None)
-    if icon_name:
-        devicon_url = f"https://raw.githubusercontent.com/devicons/devicon/master/icons/{icon_name}/{icon_name}-original.svg"
-        simpleicons_url = f"https://cdn.simpleicons.org/{icon_name}"
-        return (
-            f'<img src="{devicon_url}" '
-            f'onerror="this.onerror=null;this.src=\'{simpleicons_url}\';" '
-            f'width="22" height="auto" alt="{skill_name} icon">'
-        )
-    else:
-        # Generic tech icon fallback
-        return (
-            f'<img src="https://cdn.simpleicons.org/technology" '
-            f'width="22" height="auto" alt="Generic tech icon">'
-        )
+    selected_group = groups[st.session_state[slide_key]]
+    return f"<div class='skill-grid'>{_group_block(selected_group)}</div>"
