@@ -15,7 +15,16 @@ from components.flip_card import render_project_cards
 from components.github_stats import render_github_stats
 from components.resume import render_resume_section
 from components.skills import render_skills
-from components.social_icons import get_social_icon_img_tag
+try:
+    from components.social_icons import get_social_icon_img_tag
+except ImportError:
+    from components.social_icons import get_social_icon_url
+
+    def get_social_icon_img_tag(label: str, alt: str, extra_attrs: str = "") -> str:
+        src = get_social_icon_url(label)
+        attrs = f" {extra_attrs.strip()}" if extra_attrs.strip() else ""
+        safe_alt = alt.replace("'", "&#39;")
+        return f"<img src='{src}' alt='{safe_alt}' loading='lazy'{attrs} />"
 from data import (
     ABOUT,
     CERTIFICATIONS,
