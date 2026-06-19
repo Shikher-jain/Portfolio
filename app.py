@@ -13,7 +13,7 @@ from components.education import render_certifications, render_education
 from components.experience import render_experience
 from components.flip_card import render_project_cards
 from components.github_stats import render_github_stats
-from components.resume import render_resume_section
+from components.resume import render_resume_section, _render_single_resume_card
 from components.skills import render_skills
 try:
     from components.social_icons import get_social_icon_img_tag
@@ -40,7 +40,9 @@ from data import (
     PROFILE,
     RESUMES,
     SKILL_GROUPS,
-)
+    date,
+    Research_Paper,
+    )
 
 from github_api import fetch_github_summary, fetch_portfolio_repositories, fetch_repository
 from live_demos import apply_live_demo_links
@@ -551,6 +553,33 @@ def main() -> None:
     _divider()
     _anchor("resume")
     render_resume_section(RESUMES)
+
+    _divider()
+    _anchor("Research & Publications")
+    # '''
+    # Research_Paper = {
+    # "title": "Sahayak: A Unified Multi-Linguistic Assistant for Bharat SaaS Onboarding",
+    # "authors": ["Shikher Jain"],
+    # "publication": "https://zenodo.org/",
+    # "year": 2026,
+    # "abstract": "This paper presents a new method for image recognition using deep learning techniques.",
+    # "path": "assets/Sahayak_Research_Paper_SJ.pdf",
+    # "file_name": "Sahayak_Research_Paper_SJ.pdf",
+    # "url": "https://zenodo.org/record/1234567",
+    # "tagline": "Research paper on the development of a unified multi-linguistic assistant for Bharat SaaS onboarding.",
+    # "last_updated": date.today().strftime("%b %Y"),
+    # }
+    # '''
+    st.subheader("Research & Publications")
+    st.info("Research papers, publications, and technical articles will be showcased here once added.")
+    
+    st.markdown(f"## {Research_Paper.get('title', 'Research Paper Title')}")
+    st.markdown(f"**Authors:** {', '.join(Research_Paper.get('authors', []))}")
+    st.markdown(f"**Publication:** [{Research_Paper.get('publication', 'N/A')}]({Research_Paper.get('url', '#')})")
+    st.markdown(f"**Year:** {Research_Paper.get('year', 'N/A')}")
+    st.markdown(f"**Abstract:** {Research_Paper.get('abstract', 'N/A')}")
+    # st.markdown(f"**Last Updated:** {Research_Paper.get('last_updated', 'N/A')}")
+    _render_single_resume_card(Research_Paper)
 
     _anchor("social_Links")
     _render_social_links_expander()

@@ -12,7 +12,7 @@ PROFILE = {
     # "logo": "assets/logo.png",
     "logo": "assets/logo-SJ.png",
     "hero_stats": [
-        {"label": "Projects Shipped", "value": "10+"},
+        {"label": "Projects Shipped", "value": "15+"},
         {"label": "Models Deployed", "value": "12"},
         {"label": "TCS CodeVita Rank", "value": "1040"}
     ],
@@ -39,7 +39,7 @@ ABOUT = {
     "headline": (
         "AI/ML Engineer and Data Scientist with hands-on experience in Python and PyTorch, building end-to-end ML "
         "pipelines spanning data preprocessing, feature engineering, model training, evaluation, and FastAPI-based API "
-        "deployment. Skilled in NLP, computer vision, RAG-based semantic search, and interactive dashboards. Experienced "
+        "deployment. Skilled in NLP, Langchain, computer vision, RAG-based semantic search, and interactive dashboards. Experienced "
         "in SQL-driven data analysis, backend system development, workflow automation, and scalable containerized "
         "deployment using Docker. Passionate about data-driven problem solving at scale."
     ),
@@ -53,6 +53,7 @@ ABOUT = {
     "focus": [
         "Data Preprocessing & Feature Engineering",
         "NLP & Transformer Pipelines",
+        "RAG-Based System, LanChain",
         "Computer Vision & Real-time Analytics",
         "RESTful ML APIs on Cloud"
     ]
@@ -60,18 +61,43 @@ ABOUT = {
 
 EXPERIENCE = [
     {
-        "role": "Jr. Software Engineer Intern",
-        "company": "Novas Arc Consulting Pvt. Ltd.",
-        "location": "Remote",
-        "date": "Aug 2025 – Nov 2025",
+        "role": "Data Science Intern",
+        "company": "XYlofy AI",
+        "location": "Bengaluru, Karnataka, India",
+        "date": "Jun 2026 - Present · 1 mo",
         "highlights": [
-            "Designed and maintained a modular Python backend service processing 10k+ structured records with input validation, structured logging, centralized exception handling, and exponential backoff retry logic for fault-tolerant execution.",
-            "Engineered automated data ingestion pipelines extracting FAQs from 100+ dynamic web pages using Selenium and REST API integration, reducing manual effort by 50–60% and improving data consistency.",
-            "Built NLP-based preprocessing and feature engineering pipelines for 10,000+ text records, integrating LLM APIs to structure unstructured web data for model-ready datasets.",
-            "Developed text classification and context analysis models for intent, persona, tone, domain, and age group, enhancing response relevance by 20–30%; fine-tuned GPT-3.5 Turbo and deployed a training-data–driven AI chatbot with iterative testing.",
-            "Collaborated in Agile sprints using Git and AWS CodeCommit, diagnosing pipeline issues and streamlining feature deployment cycles."
+            "Contributed to the development of AI-powered solutions for data analysis and machine learning applications.",
+            "Assisted in preprocessing large datasets and implementing feature engineering techniques.",
+            "Collaborated with senior engineers to build and deploy scalable ML models."
         ],
-        "stack": ["Python", "Selenium", "NLP", "GPT-3.5 Turbo", "REST APIs", "LangChain", "Git", "AWS CodeCommit"]
+        "stack": ["Python", "Machine Learning", "Pandas", "NumPy"]
+    }, 
+    {
+        "role": "Data Science Intern",
+        "company": "AISECT LEARN",
+        "location": "Bhopal, Madhya Pradesh, India",
+        "date": "Apr 2026 - May 2026 · 2 mos",
+        "highlights": [
+            "Completed applied ML and NLP capstone project covering end-to-end model development workflows.",
+            "Implemented data preprocessing, feature engineering, and model evaluation pipelines for NLP tasks.",
+            "Applied classification and regression techniques with cross-validation and performance metrics (F1, Precision, Recall).",
+            "Worked with HuggingFace Transformers for text classification and NLP preprocessing."
+        ],
+        "stack": ["Python", "NLP", "HuggingFace", "Scikit-learn", "Pandas"]
+    },
+    {
+        "role": "Data Science Intern",
+        "company": "Dynamix Networks",
+        "location": "Haryana, India",
+        "date": "Jan 2026 - Apr 2026 · 4 mos",
+        "highlights": [
+            "Built end-to-end fake news detection system using ML classification on large-scale news datasets.",
+            "Collected and preprocessed news data from X (Twitter) API and Wikipedia with automated ETL pipelines.",
+            "Developed classification model (text features + TF-IDF vectorization) for fake vs genuine news detection.",
+            "Designed time-series database schema for efficient storage and retrieval of news articles at scale.",
+            "Deployed interactive Streamlit interface for real-time model inference and result visualization."
+        ],
+        "stack": ["Python", "Machine Learning", "FastAPI", "Streamlit", "PostgreSQL", "Web Scraping"]
     },
     {
         "role": "Data Science Intern",
@@ -177,7 +203,16 @@ SKILL_GROUPS = [
             {"name": "LLM Techniques", "badges": ["Prompt Engineering", "LoRA", "RAG"]}
         ]
     },
-
+    # ===============================
+    # Langchain & RAG
+    # ===============================
+    {
+        "category": "Langchain & RAG",
+        "skills": [
+            {"name": "Langchain", "badges": ["Agent Development", "Memory Management"]},
+            {"name": "Retrieval-Augmented Generation (RAG)", "badges": ["Document Retrieval", "Contextual Generation"]}
+        ]
+    },
     # ===============================
     # Computer Vision
     # ===============================
@@ -273,7 +308,7 @@ EDUCATION = [
         "institution": "Faculty of Engineering and Technology, Agra College (AKTU)",
         "degree": "B.Tech in Computer Science and Engineering",
         "period": "2022–2026",
-        "details": "CGPA: 7.82 / 10"
+        "details": "CGPA: 7.9 / 10"
     }
 ]
 
@@ -305,30 +340,49 @@ RESUME = {
 
 RESUMES = [
     {
-        "path": "assets/Shikher_Jain_Resume_AI_ML.pdf",
-        "file_name": "Shikher_Jain_Resume_AI_ML.pdf",
+        "path": "assets/ShikherJain_Resume_AI.pdf",
+        "file_name": "Shikher_Jain_Resume_AI.pdf",
         "tagline": "AI/ML focused profile for machine learning and applied AI roles.",
         "last_updated": date.today().strftime("%b %Y"),
     },
     {
-        "path": "assets/Shikher_Jain_Resume_DataScience.pdf",
-        "file_name": "Shikher_Jain_Resume_DataScience.pdf",
+        "path": "assets/ShikherJain_Resume_ML.pdf",
+        "file_name": "Shikher_Jain_Resume_ML.pdf",
+        "tagline": "Machine Learning profile highlighting algorithm development and model deployment.",
+        "last_updated": date.today().strftime("%b %Y"),
+    },
+    {
+        "path": "assets/ShikherJain_Resume_Backend.pdf",
+        "file_name": "Shikher_Jain_Resume_Backend.pdf",
+        "tagline": "Backend Development profile highlighting API design and production-ready development.",
+        "last_updated": date.today().strftime("%b %Y"),
+    },
+    {
+        "path": "assets/ShikherJain_Resume_DataScientist.pdf",
+        "file_name": "ShikherJain_Resume_DataScientist.pdf",
         "tagline": "Data Science focused version highlighting EDA, modeling, and analytics projects.",
         "last_updated": date.today().strftime("%b %Y"),
     },
     {
-        "path": "assets/Shikher_Jain_Resume_Product_Support_Engineer.pdf",
-        "file_name": "Shikher_Jain_Resume_Product_Support_Engineer.pdf",
-        "tagline": "Product Support Engineer profile emphasizing troubleshooting, systems, and customer impact.",
-        "last_updated": date.today().strftime("%b %Y"),
-    },
-    {
-        "path": "assets/Shikher_Jain_Resume_SWE.pdf",
-        "file_name": "Shikher_Jain_Resume_SWE.pdf",
-        "tagline": "Software Engineering profile focused on backend, APIs, and production-ready development.",
+        "path": "assets/ShikherJain_Resume_DataAnalyst.pdf",
+        "file_name": "Shikher_Jain_Resume_DataAnalyst.pdf",
+        "tagline": "Data Analysis profile highlighting data visualization, reporting, and business intelligence projects.",
         "last_updated": date.today().strftime("%b %Y"),
     },
 ]
+
+Research_Paper = {
+    "title": "Sahayak: A Unified Multi-Linguistic Assistant for Bharat SaaS Onboarding",
+    "authors": ["Shikher Jain"],
+    "publication": "https://zenodo.org/",
+    "year": 2026,
+    "abstract": "This paper presents a new method for image recognition using deep learning techniques.",
+    "path": "assets/Sahayak_Research_Paper_SJ.pdf",
+    "file_name": "Sahayak_Research_Paper_SJ.pdf",
+    "url": "https://zenodo.org/record/1234567",
+    "tagline": "Research paper on the development of a unified multi-linguistic assistant for Bharat SaaS onboarding.",
+    "last_updated": date.today().strftime("%b %Y"),
+}
 
 GITHUB_CONFIG = {
     "username": "Shikher-jain",
