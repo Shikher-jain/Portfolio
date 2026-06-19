@@ -72,6 +72,44 @@ EXPERIENCE = [
             "Collaborated in Agile sprints using Git and AWS CodeCommit, diagnosing pipeline issues and streamlining feature deployment cycles."
         ],
         "stack": ["Python", "Selenium", "NLP", "GPT-3.5 Turbo", "REST APIs", "LangChain", "Git", "AWS CodeCommit"]
+    },
+    {
+        "role": "Data Science Intern",
+        "company": "Cognifyz Technologies",
+        "location": "Nagpur, India",
+        "date": "Nov 2025 – Dec 2025",
+        "highlights": [
+            "Executed end-to-end data preprocessing and EDA, including missing value handling, feature cleaning, and statistical analysis to extract key insights.",
+            "Performed geospatial and business analysis to identify trends across cities, cuisines, pricing, and service features (table booking, delivery).",
+            "Applied feature engineering techniques to create meaningful variables improving downstream model performance.",
+            "Built and evaluated regression models (Linear, Decision Tree, Random Forest) to predict restaurant ratings, comparing performance using standard metrics.",
+            "Developed data visualizations and insight reports to communicate patterns in customer preferences and business drivers effectively."
+        ],
+        "stack": ["Python", "Matplotlib", "Seaborn", "PyTorch", "Scikit-Learn", "Git", "Pandas", "NumPy", "SQL"]
+    },
+    {
+        "role": "Jr. Software Engineer Intern",
+        "company": "Novas Arc Consulting Pvt. Ltd.",
+        "location": "Remote",
+        "date": "Aug 2025 – Nov 2025",
+        "highlights": [
+            "Designed and maintained a modular Python backend service processing 10k+ structured records with input validation, structured logging, centralized exception handling, and exponential backoff retry logic for fault-tolerant execution.",
+            "Engineered automated data ingestion pipelines extracting FAQs from 100+ dynamic web pages using Selenium and REST API integration, reducing manual effort by 50–60% and improving data consistency.",
+            "Built NLP-based preprocessing and feature engineering pipelines for 10,000+ text records, integrating LLM APIs to structure unstructured web data for model-ready datasets.",
+            "Developed text classification and context analysis models for intent, persona, tone, domain, and age group, enhancing response relevance by 20–30%; fine-tuned GPT-3.5 Turbo and deployed a training-data–driven AI chatbot with iterative testing.",
+            "Collaborated in Agile sprints using Git and AWS CodeCommit, diagnosing pipeline issues and streamlining feature deployment cycles."
+        ],
+        "stack": ["Python", "Selenium", "NLP", "GPT-3.5 Turbo", "REST APIs", "RAG", "Git", "AWS CodeCommit"]
+    },
+    {
+        "role": "Python Developer Intern",
+        "company": "CodSoft",
+        "location": "New Delhi, India",
+        "date": "June 2024 – July 2024",
+        "highlights": [
+            "Developed 5 Python GUI applications using Tkinter including task manager, calculator, password generator, and contact book — strengthened Python fundamentals and OOP concepts."   
+        ],
+        "stack": ["Python", "Tkinter", "Pandas", "NumPy", "Git"]
     }
 ]
 
